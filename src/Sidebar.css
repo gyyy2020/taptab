@@ -1,0 +1,61 @@
+.sidebar {
+  width: 80px;
+  height: 100vh;
+  background-color: #f0f0f0;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-container {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.default-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.shortcuts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.shortcuts li {
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.shortcuts li:hover {
+  background-color: #ddd;
+}
+
+.add-button {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.settings-button {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
