@@ -1,6 +1,7 @@
 import Sidebar from './Sidebar';
 import TimeZoneSelector from './TimeZoneSelector';
 import DateTimeDisplay from './DateTimeDisplay';
+import SearchBar from './SearchBar';
 import './App.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <div className="main-content">
         <TimeZoneSelector />
         <DateTimeDisplay />
+        <SearchBar />
         <h1>Vite + React</h1>
       </div>
     </div>
