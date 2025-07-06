@@ -12,8 +12,30 @@ function SearchBar() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [searchEngines, setSearchEngines] = useState(initialSearchEngines);
-  const [selectedEngine, setSelectedEngine] = useState(initialSearchEngines[0]); // Default to Google
+  const [searchEngines, setSearchEngines] = useState(() => {
+    const savedEngines = localStorage.getItem('searchEngines');
+    const loadedEngines = savedEngines ? JSON.parse(savedEngines) : initialSearchEngines;
+    console.log('Loaded searchEngines from localStorage:', loadedEngines);
+    return loadedEngines;
+  });
+  const [selectedEngine, setSelectedEngine] = useState(() => {
+    const savedSelectedEngine = localStorage.getItem('selectedEngine');
+    let initialSelected = initialSearchEngines[0];
+
+    if (savedSelectedEngine) {
+      const parsedEngine = JSON.parse(savedSelectedEngine);
+      // Try to find the loaded engine in the currently available engines (which includes initial and potentially loaded ones)
+      const foundEngine = searchEngines.find(engine => engine.name === parsedEngine.name && engine.url === parsedEngine.url);
+      if (foundEngine) {
+        initialSelected = foundEngine;
+      } else {
+        // If the selected engine from localStorage is not in the current list, default to the first initial engine
+        console.warn('Selected engine from localStorage not found in current engines. Defaulting.', parsedEngine);
+      }
+    }
+    console.log('Initial selectedEngine:', initialSelected);
+    return initialSelected;
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const searchBarRef = useRef(null);
 
@@ -35,6 +57,16 @@ function SearchBar() {
     };
   }, [isMenuVisible]);
 
+  useEffect(() => {
+    localStorage.setItem('searchEngines', JSON.stringify(searchEngines));
+    console.log('Saved searchEngines to localStorage:', searchEngines);
+  }, [searchEngines]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedEngine', JSON.stringify(selectedEngine));
+    console.log('Saved selectedEngine to localStorage:', selectedEngine);
+  }, [selectedEngine]);
+
   const handleSearch = (event) => {
     event.preventDefault();
     if (searchTerm.trim()) {
@@ -50,7 +82,6 @@ function SearchBar() {
   const handleAddEngine = (newEngine) => {
     setSearchEngines((prevEngines) => {
       const updatedEngines = [...prevEngines, newEngine];
-      console.log('Updated search engines:', updatedEngines);
       return updatedEngines;
     });
   };

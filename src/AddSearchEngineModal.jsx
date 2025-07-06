@@ -7,14 +7,9 @@ function AddSearchEngineModal({ isOpen, onClose, onAddEngine }) {
 
   if (!isOpen) return null;
 
-  console.log('Rendering AddSearchEngineModal');
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('handleSubmit called in AddSearchEngineModal');
-    console.log('Name:', name, 'URL:', url);
     if (name.trim() && url.trim()) {
-      console.log('onAddEngine is a function:', typeof onAddEngine === 'function');
       onAddEngine({ name, url, icon: `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}` });
       setName('');
       setUrl('');
