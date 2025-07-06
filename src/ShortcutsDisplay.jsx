@@ -23,7 +23,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
         isResizable={true}
       >
         {shortcuts.map((shortcut) => (
-          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }}>
+          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }} className="shortcut-app">
             <a href={shortcut.url} target="_blank" rel="noopener noreferrer" className="shortcut-link">
               <img src={`https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=32`} alt="" className="shortcut-icon" />
               <span className="shortcut-name">{shortcut.name}</span>

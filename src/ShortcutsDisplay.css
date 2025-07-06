@@ -50,17 +50,46 @@
   color: #0056b3;
 }
 
+.shortcut-app {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.shortcut-app:hover {
+  transform: translateY(-5px);
+}
+
 .shortcut-link {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  text-decoration: none;
+  color: #333;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 .shortcut-icon {
-  width: 24px;
-  height: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 
 .shortcut-name {
-  font-size: 1em;
+  font-size: 0.9em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
