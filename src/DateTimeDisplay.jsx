@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const DateTimeDisplay = React.forwardRef((props, ref) => {
+const DateTimeDisplay = React.forwardRef(({ timeZone }, ref) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
@@ -12,14 +12,12 @@ const DateTimeDisplay = React.forwardRef((props, ref) => {
   }, []);
 
   const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+    return new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: timeZone }).format(date);
   };
 
   const formatDate = (date) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString(undefined, options);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: timeZone };
+    return new Intl.DateTimeFormat('en-US', options).format(date);
   };
 
   return (

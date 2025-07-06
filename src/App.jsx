@@ -8,6 +8,8 @@ import './App.css';
 
 function App() {
   const [selectedShortcutCategory, setSelectedShortcutCategory] = useState('Common');
+  const [selectedTimeZone, setSelectedTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone); // Default to local timezone
+
   const mainContentRef = useRef(null);
   const dateTimeRef = useRef(null);
   const searchBarRef = useRef(null);
@@ -65,8 +67,8 @@ function App() {
     <div className="app-container">
       <Sidebar onSelectCategory={setSelectedShortcutCategory} />
       <div className="main-content" ref={mainContentRef}>
-        <TimeZoneSelector />
-        <DateTimeDisplay ref={dateTimeRef} />
+        <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />
+        <DateTimeDisplay ref={dateTimeRef} timeZone={selectedTimeZone} />
         <SearchBar ref={searchBarRef} />
         <ShortcutsDisplay category={selectedShortcutCategory} height={shortcutsHeight} />
         <div className="motto-line" ref={mottoRef}>

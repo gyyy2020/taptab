@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 
-const TimeZoneSelector = () => {
-  const [selectedTimeZone, setSelectedTimeZone] = useState('Local Time');
-
+const TimeZoneSelector = ({ onSelectTimeZone }) => {
   const timezones = [
-    'Local Time',
-    'New York',
-    'London',
-    'Tokyo',
-    'Sydney',
-    'Shanghai',
+    { name: 'Local Time', iana: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    { name: 'New York', iana: 'America/New_York' },
+    { name: 'London', iana: 'Europe/London' },
+    { name: 'Tokyo', iana: 'Asia/Tokyo' },
+    { name: 'Sydney', iana: 'Australia/Sydney' },
+    { name: 'Shanghai', iana: 'Asia/Shanghai' },
   ];
 
+  const [selectedTimeZone, setSelectedTimeZone] = useState(timezones[0].iana);
+
   const handleChange = (event) => {
-    setSelectedTimeZone(event.target.value);
+    const selectedIana = event.target.value;
+    setSelectedTimeZone(selectedIana);
+    onSelectTimeZone(selectedIana);
   };
 
   return (
     <div className="timezone-selector">
       <select value={selectedTimeZone} onChange={handleChange}>
         {timezones.map((zone) => (
-          <option key={zone} value={zone}>
-            {zone}
+          <option key={zone.iana} value={zone.iana}>
+            {zone.name}
           </option>
         ))}
       </select>
