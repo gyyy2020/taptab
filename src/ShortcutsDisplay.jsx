@@ -1,49 +1,35 @@
 import React from 'react';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 import './ShortcutsDisplay.css';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
-const ShortcutsDisplay = ({ category, height }) => {
-  const allShortcuts = {
-    Common: [
-      { name: 'Google', url: 'https://www.google.com' },
-      { name: 'YouTube', url: 'https://www.youtube.com' },
-      { name: 'Facebook', url: 'https://www.facebook.com' },
-    ],
-    AI: [
-      { name: 'ChatGPT', url: 'https://chat.openai.com' },
-      { name: 'Bard', url: 'https://bard.google.com' },
-    ],
-    Code: [
-      { name: 'GitHub', url: 'https://github.com' },
-      { name: 'Stack Overflow', url: 'https://stackoverflow.com' },
-    ],
-    Info: [
-      { name: 'Wikipedia', url: 'https://www.wikipedia.org' },
-      { name: 'BBC News', url: 'https://www.bbc.com/news' },
-    ],
-    Learn: [
-      { name: 'Coursera', url: 'https://www.coursera.org' },
-      { name: 'edX', url: 'https://www.edx.org' },
-    ],
-    Fun: [
-      { name: 'Netflix', url: 'https://www.netflix.com' },
-      { name: 'Spotify', url: 'https://www.spotify.com' },
-    ],
-  };
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
-  const shortcutsToDisplay = allShortcuts[category] || [];
+const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height }) => {
+  const currentLayout = layouts[category] || shortcuts.map(s => ({ i: s.i, x: s.x, y: s.y, w: s.w, h: s.h }));
 
   return (
-    <div className="shortcuts-display" style={{ height: height ? `${height}px` : 'auto', overflowY: 'auto' }}>
-      {/* <h2>{category} Shortcuts</h2> */}
-      <ul>
-        {shortcutsToDisplay.map((shortcut) => (
-          <li key={shortcut.name}>
+    <div className="shortcuts-display" style={{ height: height ? `${height}px` : 'auto' }}>
+      <ResponsiveGridLayout
+        className="layout"
+        layouts={{ lg: currentLayout }}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        rowHeight={50}
+        width={1200} // This will be overridden by WidthProvider
+        onLayoutChange={(layout, newLayouts) => onLayoutChange(layout, newLayouts, category)}
+        isDraggable={true}
+        isResizable={true}
+      >
+        {shortcuts.map((shortcut) => (
+          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }}>
             <a href={shortcut.url} target="_blank" rel="noopener noreferrer">
               {shortcut.name}
             </a>
-          </li>
+          </div>
         ))}
-      </ul>
+      </ResponsiveGridLayout>
     </div>
   );
 };
