@@ -1,0 +1,51 @@
+.shortcuts-display {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 98%;
+  box-sizing: border-box;
+}
+
+/* .shortcuts-display h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  text-align: center;
+} */
+
+.shortcuts-display ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.shortcuts-display li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1.1em;
+  transition: all 0.2s ease-in-out;
+}
+
+.shortcuts-display li:hover {
+  background-color: #e9e9e9;
+  border-color: #bbb;
+  transform: translateY(-2px);
+}
+
+.shortcuts-display li a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.shortcuts-display li a:hover {
+  color: #0056b3;
+}

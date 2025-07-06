@@ -30,12 +30,17 @@ html, body, #root {
   overflow: hidden; /* Prevent scrollbars */
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* Removed global padding */
 }
 
 #root {

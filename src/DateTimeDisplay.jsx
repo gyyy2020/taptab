@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const DateTimeDisplay = () => {
+const DateTimeDisplay = React.forwardRef((props, ref) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
@@ -23,11 +23,11 @@ const DateTimeDisplay = () => {
   };
 
   return (
-    <div className="datetime-display">
+    <div className="datetime-display" ref={ref}>
       <div className="time">{formatTime(currentDateTime)}</div>
       <div className="date">{formatDate(currentDateTime)}</div>
     </div>
   );
-};
+});
 
 export default DateTimeDisplay;

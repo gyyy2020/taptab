@@ -3,7 +3,7 @@ import SearchEngineMenu from './SearchEngineMenu';
 import AddSearchEngineModal from './AddSearchEngineModal';
 import './SearchBar.css';
 
-function SearchBar() {
+const SearchBar = React.forwardRef((props, ref) => {
   const initialSearchEngines = [
     { name: 'Google', url: 'https://www.google.com/search?q=', icon: 'https://www.google.com/favicon.ico' },
     { name: 'Bing', url: 'https://www.bing.com/search?q=', icon: 'https://www.bing.com/favicon.ico' },
@@ -92,7 +92,7 @@ function SearchBar() {
   };
 
   return (
-    <form className="search-bar-container" onSubmit={handleSearch} ref={searchBarRef}>
+    <form className="search-bar-container" onSubmit={handleSearch} ref={ref}>
       <button type="button" className="search-icon-button" onClick={() => setIsMenuVisible(!isMenuVisible)}>
         <img src={selectedEngine.icon} alt={selectedEngine.name} className="search-engine-icon" />
       </button>
@@ -108,6 +108,7 @@ function SearchBar() {
       </button>
       <SearchEngineMenu
         isVisible={isMenuVisible}
+        onClose={() => setIsMenuVisible(false)}
         onSelectEngine={handleEngineSelect}
         searchEngines={searchEngines}
         onAddEngineClick={openAddEngineModal}
@@ -119,6 +120,6 @@ function SearchBar() {
       />
     </form>
   );
-}
+});
 
 export default SearchBar;

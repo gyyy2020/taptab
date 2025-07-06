@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ onSelectCategory }) => {
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
   const shortcuts = ["Common", "AI", "Code", "Info", "Learn", "Fun"];
+  const [selectedCategory, setSelectedCategory] = useState("Common"); // Default selected category
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();
@@ -19,6 +20,11 @@ const Sidebar = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    onSelectCategory(category);
   };
 
   return (
@@ -40,7 +46,13 @@ const Sidebar = () => {
       <div className="shortcuts">
         <ul>
           {shortcuts.map((shortcut) => (
-            <li key={shortcut}>{shortcut}</li>
+            <li
+              key={shortcut}
+              onClick={() => handleCategoryClick(shortcut)}
+              className={selectedCategory === shortcut ? 'active' : ''}
+            >
+              {shortcut}
+            </li>
           ))}
         </ul>
       </div>
