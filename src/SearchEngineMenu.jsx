@@ -1,8 +1,10 @@
 import React from 'react';
 import './SearchEngineMenu.css';
 
-function SearchEngineMenu({ isVisible, onSelectEngine, searchEngines }) {
+function SearchEngineMenu({ isVisible, onSelectEngine, searchEngines, onAddEngineClick }) {
   if (!isVisible) return null;
+
+  console.log('Rendering SearchEngineMenu with engines:', searchEngines);
 
   return (
     <div className="search-engine-menu">
@@ -13,7 +15,7 @@ function SearchEngineMenu({ isVisible, onSelectEngine, searchEngines }) {
             {engine.name}
           </li>
         ))}
-        <li className="add-new">
+        <li className="add-new" onClick={onAddEngineClick}>
           + Add New
         </li>
       </ul>

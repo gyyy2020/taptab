@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SearchEngineMenu from './SearchEngineMenu';
+import AddSearchEngineModal from './AddSearchEngineModal';
 import './SearchBar.css';
 
-const searchEngines = [
-  { name: 'Google', url: 'https://www.google.com/search?q=', icon: 'https://www.google.com/favicon.ico' },
-  { name: 'Bing', url: 'https://www.bing.com/search?q=', icon: 'https://www.bing.com/favicon.ico' },
-  { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', icon: 'https://duckduckgo.com/favicon.ico' },
-];
-
 function SearchBar() {
+  const initialSearchEngines = [
+    { name: 'Google', url: 'https://www.google.com/search?q=', icon: 'https://www.google.com/favicon.ico' },
+    { name: 'Bing', url: 'https://www.bing.com/search?q=', icon: 'https://www.bing.com/favicon.ico' },
+    { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', icon: 'https://duckduckgo.com/favicon.ico' },
+  ];
+
   const [searchTerm, setSearchTerm] = useState('');
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [selectedEngine, setSelectedEngine] = useState(searchEngines[0]); // Default to Google
+  const [searchEngines, setSearchEngines] = useState(initialSearchEngines);
+  const [selectedEngine, setSelectedEngine] = useState(initialSearchEngines[0]); // Default to Google
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const searchBarRef = useRef(null);
 
   useEffect(() => {
@@ -44,6 +47,19 @@ function SearchBar() {
     setIsMenuVisible(false);
   };
 
+  const handleAddEngine = (newEngine) => {
+    setSearchEngines((prevEngines) => {
+      const updatedEngines = [...prevEngines, newEngine];
+      console.log('Updated search engines:', updatedEngines);
+      return updatedEngines;
+    });
+  };
+
+  const openAddEngineModal = () => {
+    setIsMenuVisible(false); // Close search engine menu
+    setIsModalVisible(true);
+  };
+
   return (
     <form className="search-bar-container" onSubmit={handleSearch} ref={searchBarRef}>
       <button type="button" className="search-icon-button" onClick={() => setIsMenuVisible(!isMenuVisible)}>
@@ -61,9 +77,14 @@ function SearchBar() {
       </button>
       <SearchEngineMenu
         isVisible={isMenuVisible}
-        onClose={() => setIsMenuVisible(false)}
         onSelectEngine={handleEngineSelect}
         searchEngines={searchEngines}
+        onAddEngineClick={openAddEngineModal}
+      />
+      <AddSearchEngineModal
+        isOpen={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onAddEngine={handleAddEngine}
       />
     </form>
   );
