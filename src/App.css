@@ -16,7 +16,7 @@
 
 .main-content.simple-mode {
   justify-content: center; /* Center vertically */
-  padding-bottom: 10vh; /* Adjust to be slightly higher than center */
+  padding-bottom: 33vh; /* Adjust to be slightly higher than center */
 }
 
 .datetime-display {
