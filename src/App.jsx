@@ -6,6 +6,7 @@ import ShortcutContextMenu from './ShortcutContextMenu';
 import BackgroundContextMenu from './BackgroundContextMenu';
 import AddShortcutModal from './AddShortcutModal';
 import EditShortcutModal from './EditShortcutModal';
+import SettingsPage from './SettingsPage';
 import TimeZoneSelector from './TimeZoneSelector';
 import DateTimeDisplay from './DateTimeDisplay';
 import SearchBar from './SearchBar';
@@ -221,6 +222,15 @@ function App() {
   const [editingShortcut, setEditingShortcut] = useState(null);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [backgroundContextMenu, setBackgroundContextMenu] = useState({ visible: false, x: 0, y: 0 });
+  const [isSettingsPageVisible, setIsSettingsPageVisible] = useState(false);
+  const [appSettings, setAppSettings] = useState(() => {
+    const savedSettings = localStorage.getItem('appSettings');
+    return savedSettings ? JSON.parse(savedSettings) : {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem('appSettings', JSON.stringify(appSettings));
+  }, [appSettings]);
 
   const handleShowAddShortcutModal = () => {
     setIsAddModalVisible(true);
@@ -237,13 +247,21 @@ function App() {
   };
 
   const handleSetting = () => {
-    alert('Setting clicked!');
+    setIsSettingsPageVisible(true);
     handleCloseBackgroundContextMenu();
   };
 
   const handleChangeWallpaper = () => {
     alert('Change Wallpaper clicked!');
     handleCloseBackgroundContextMenu();
+  };
+
+  const handleSaveSettings = (newSettings) => {
+    setAppSettings(newSettings);
+  };
+
+  const handleCloseSettings = () => {
+    setIsSettingsPageVisible(false);
   };
 
   const handleSaveNewShortcut = ({ name, url }) => {
@@ -328,18 +346,19 @@ function App() {
   };
 
   return (
-    <div className="app-container" onContextMenu={handleGlobalContextMenu}>
+    <div className="app-container" onContextMenu={handleGlobalContextMenu} style={appSettings.wallpaper ? { backgroundImage: `url(${appSettings.wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
       <Sidebar
         ref={sidebarRef}
         onSelectCategory={setSelectedShortcutCategory}
         onCategoryChange={handleCategoryChange}
         onShowContextMenu={handleSidebarContextMenu}
+        onShowSettings={handleSetting}
       />
       <WeatherWidget ref={weatherWidgetRef} />
       <div className="main-content" ref={mainContentRef}>
         <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />
         <DateTimeDisplay ref={dateTimeRef} timeZone={selectedTimeZone} />
-        <SearchBar ref={searchBarRef} />
+        <SearchBar ref={searchBarRef} openInNewTab={appSettings.openSearchResultsInNewTab} />
         <ShortcutsDisplay
           category={selectedShortcutCategory}
           shortcuts={allShortcuts[selectedShortcutCategory]}
@@ -347,6 +366,7 @@ function App() {
           onLayoutChange={onLayoutChange}
           height={shortcutsHeight}
           onShortcutContextMenu={handleShortcutContextMenu}
+          openInNewTab={appSettings.openShortcutsInNewTab}
         />
         <div className="motto-line" ref={mottoRef}>
           <p>"The only way to do great work is to love what you do." - Steve Jobs</p>
@@ -391,6 +411,12 @@ function App() {
         onSetting={handleSetting}
         onChangeWallpaper={handleChangeWallpaper}
         onClose={handleCloseBackgroundContextMenu}
+      />
+      <SettingsPage
+        visible={isSettingsPageVisible}
+        onClose={handleCloseSettings}
+        onSettingChange={handleSaveSettings}
+        currentSettings={appSettings}
       />
     </div>
   );

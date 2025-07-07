@@ -3,7 +3,7 @@ import SearchEngineMenu from './SearchEngineMenu';
 import AddSearchEngineModal from './AddSearchEngineModal';
 import './SearchBar.css';
 
-const SearchBar = React.forwardRef((props, ref) => {
+const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
   const initialSearchEngines = [
     { name: 'Google', url: 'https://www.google.com/search?q=', icon: 'https://www.google.com/favicon.ico' },
     { name: 'Bing', url: 'https://www.bing.com/search?q=', icon: 'https://www.bing.com/favicon.ico' },
@@ -52,7 +52,7 @@ const SearchBar = React.forwardRef((props, ref) => {
   const handleSearch = (event) => {
     event.preventDefault();
     if (searchTerm.trim()) {
-      window.location.href = `${selectedEngine.url}${encodeURIComponent(searchTerm)}`;
+      window.open(`${selectedEngine.url}${encodeURIComponent(searchTerm)}`, openInNewTab ? '_blank' : '_self');
     }
   };
 

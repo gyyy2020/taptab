@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import CategoryContextMenu from './CategoryContextMenu';
 import './Sidebar.css';
 
-const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu }) => {
+const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShowSettings }) => {
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
   const [shortcuts, setShortcuts] = useState(["Common", "AI", "Code", "Info", "Learn", "Fun"]);
@@ -133,7 +133,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu }) => {
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
       </div>
-      <div className="settings-button">
+      <div className="settings-button" onClick={onShowSettings}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"

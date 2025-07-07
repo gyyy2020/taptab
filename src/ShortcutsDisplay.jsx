@@ -8,7 +8,7 @@ import YearProgressWidget from './YearProgressWidget';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height, onShortcutContextMenu }) => {
+const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height, onShortcutContextMenu, openInNewTab }) => {
   const currentLayout = layouts[category] || shortcuts.map(s => ({ i: s.i, x: s.x, y: s.y, w: s.w, h: s.h }));
   const isDraggingRef = useRef(false);
   const hasDraggedRef = useRef(false);
@@ -65,7 +65,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
             ) : (
               <a
                 href={shortcut.url}
-                target="_blank"
+                target={openInNewTab ? "_blank" : "_self"}
                 rel="noopener noreferrer"
                 className="shortcut-link"
                 onClick={handleClick}
