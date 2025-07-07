@@ -9,21 +9,29 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height }) => {
   const currentLayout = layouts[category] || shortcuts.map(s => ({ i: s.i, x: s.x, y: s.y, w: s.w, h: s.h }));
   const isDraggingRef = useRef(false);
+  const hasDraggedRef = useRef(false);
 
   const handleDragStart = () => {
     isDraggingRef.current = true;
+    hasDraggedRef.current = false;
+  };
+
+  const handleDrag = () => {
+    hasDraggedRef.current = true;
   };
 
   const handleDragStop = () => {
-    // Use a timeout to distinguish between a drag and a click
     setTimeout(() => {
       isDraggingRef.current = false;
+      hasDraggedRef.current = false;
     }, 50);
   };
 
   const handleClick = (e) => {
-    if (isDraggingRef.current) {
+    // Only prevent click if a drag actually happened
+    if (hasDraggedRef.current) {
       e.preventDefault();
+      hasDraggedRef.current = false;
     }
   };
 
@@ -38,6 +46,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
         width={1200} // This will be overridden by WidthProvider
         onLayoutChange={(layout, newLayouts) => onLayoutChange(layout, newLayouts, category)}
         onDragStart={handleDragStart}
+        onDrag={handleDrag}
         onDragStop={handleDragStop}
         isDraggable={true}
         isResizable={true}
