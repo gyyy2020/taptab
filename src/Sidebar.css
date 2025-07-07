@@ -28,13 +28,13 @@
   background-color: #ccc;
 }
 
-.shortcuts ul {
+.shortcuts-category ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.shortcuts li {
+.shortcuts-category li {
   padding: 2px 3px;
   margin: 8px 0;
   cursor: pointer;
@@ -43,7 +43,7 @@
   font-size: 1.2em;
 }
 
-.shortcuts li:hover {
+.shortcuts-category li:hover {
   background-color: #ddd;
 }
 

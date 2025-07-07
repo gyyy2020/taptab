@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Sidebar from './Sidebar';
+import ReactDOM from 'react-dom';
+import CategoryContextMenu from './CategoryContextMenu';
 import TimeZoneSelector from './TimeZoneSelector';
 import DateTimeDisplay from './DateTimeDisplay';
 import SearchBar from './SearchBar';
@@ -127,9 +129,73 @@ function App() {
     });
   };
 
+  // Handler to sync category changes from Sidebar (edit/delete)
+  const handleCategoryChange = (newCategoryList, action, oldCategory, newCategory) => {
+    // If a category is renamed, update allShortcuts and layouts keys
+    if (action === 'edit' && oldCategory && newCategory) {
+      setAllShortcuts(prev => {
+        const updated = { ...prev };
+        if (updated[oldCategory]) {
+          updated[newCategory] = updated[oldCategory];
+          delete updated[oldCategory];
+        }
+        return updated;
+      });
+      setLayouts(prev => {
+        const updated = { ...prev };
+        if (updated[oldCategory]) {
+          updated[newCategory] = updated[oldCategory];
+          delete updated[oldCategory];
+        }
+        return updated;
+      });
+      if (selectedShortcutCategory === oldCategory) {
+        setSelectedShortcutCategory(newCategory);
+      }
+    }
+    // If a category is deleted, remove from allShortcuts and layouts
+    if (action === 'delete' && oldCategory) {
+      setAllShortcuts(prev => {
+        const updated = { ...prev };
+        delete updated[oldCategory];
+        return updated;
+      });
+      setLayouts(prev => {
+        const updated = { ...prev };
+        delete updated[oldCategory];
+        return updated;
+      });
+      if (selectedShortcutCategory === oldCategory) {
+        setSelectedShortcutCategory(newCategoryList[0] || '');
+      }
+    }
+  };
+
+  // Context menu state and handlers for category
+
+  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, category: null, onEdit: null, onDelete: null });
+
+  // Pass handler to Sidebar to trigger context menu at root
+  const handleSidebarContextMenu = (x, y, category, onEdit, onDelete) => {
+    setContextMenu({
+      visible: true,
+      x,
+      y,
+      category,
+      onEdit: () => { onEdit(category); setContextMenu((c) => ({ ...c, visible: false })); },
+      onDelete: () => { onDelete(category); setContextMenu((c) => ({ ...c, visible: false })); },
+    });
+  };
+
+  const handleCloseContextMenu = () => setContextMenu((c) => ({ ...c, visible: false }));
+
   return (
     <div className="app-container">
-      <Sidebar onSelectCategory={setSelectedShortcutCategory} />
+      <Sidebar
+        onSelectCategory={setSelectedShortcutCategory}
+        onCategoryChange={handleCategoryChange}
+        onShowContextMenu={handleSidebarContextMenu}
+      />
       <div className="main-content" ref={mainContentRef}>
         <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />
         <DateTimeDisplay ref={dateTimeRef} timeZone={selectedTimeZone} />
@@ -145,6 +211,18 @@ function App() {
           <p>"The only way to do great work is to love what you do." - Steve Jobs</p>
         </div>
       </div>
+      {typeof window !== 'undefined' && document.getElementById('context-menu-root') &&
+        ReactDOM.createPortal(
+          <CategoryContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            visible={contextMenu.visible}
+            onEdit={contextMenu.onEdit}
+            onDelete={contextMenu.onDelete}
+            onClose={handleCloseContextMenu}
+          />, document.getElementById('context-menu-root')
+        )
+      }
     </div>
   );
 }

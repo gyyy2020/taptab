@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
+import CategoryContextMenu from './CategoryContextMenu';
 import './Sidebar.css';
 
-const Sidebar = ({ onSelectCategory }) => {
+const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu }) => {
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
-  const shortcuts = ["Common", "AI", "Code", "Info", "Learn", "Fun"];
+  const [shortcuts, setShortcuts] = useState(["Common", "AI", "Code", "Info", "Learn", "Fun"]);
   const [selectedCategory, setSelectedCategory] = useState("Common"); // Default selected category
+  // Remove local contextMenu state, use App's portal instead
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();
@@ -27,6 +29,48 @@ const Sidebar = ({ onSelectCategory }) => {
     onSelectCategory(category);
   };
 
+  const handleCategoryRightClick = (e, category) => {
+    e.preventDefault();
+    if (onShowContextMenu) {
+      onShowContextMenu(
+        e.clientX,
+        e.clientY,
+        category,
+        handleEditCategory,
+        handleDeleteCategory
+      );
+    }
+  };
+
+  const handleEditCategory = (category) => {
+    const newName = prompt('Edit category name:', category);
+    if (newName && newName !== category && !shortcuts.includes(newName)) {
+      const updatedShortcuts = shortcuts.map(cat => (cat === category ? newName : cat));
+      setShortcuts(updatedShortcuts);
+      if (selectedCategory === category) {
+        setSelectedCategory(newName);
+        onSelectCategory(newName);
+      }
+      if (onCategoryChange) {
+        onCategoryChange(updatedShortcuts, 'edit', category, newName);
+      }
+    }
+  };
+
+  const handleDeleteCategory = (category) => {
+    if (window.confirm(`Delete category "${category}" and all its shortcuts?`)) {
+      const newShortcuts = shortcuts.filter(cat => cat !== category);
+      setShortcuts(newShortcuts);
+      if (selectedCategory === category) {
+        setSelectedCategory(newShortcuts[0] || '');
+        onSelectCategory(newShortcuts[0] || '');
+      }
+      if (onCategoryChange) {
+        onCategoryChange(newShortcuts, 'delete', category);
+      }
+    }
+  };
+
   return (
     <div className="sidebar">
       <div className="avatar-container" onClick={handleAvatarClick}>
@@ -43,12 +87,13 @@ const Sidebar = ({ onSelectCategory }) => {
           accept="image/*"
         />
       </div>
-      <div className="shortcuts">
+      <div className="shortcuts-category">
         <ul>
           {shortcuts.map((shortcut) => (
             <li
               key={shortcut}
               onClick={() => handleCategoryClick(shortcut)}
+              onContextMenu={(e) => handleCategoryRightClick(e, shortcut)}
               className={selectedCategory === shortcut ? 'active' : ''}
             >
               {shortcut}
@@ -56,6 +101,8 @@ const Sidebar = ({ onSelectCategory }) => {
           ))}
         </ul>
       </div>
+      {/* Context menu is now rendered at the root via portal */}
+      <div id="context-menu-root" />
       <div className="add-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
