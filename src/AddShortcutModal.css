@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,19 +12,19 @@
 }
 
 .add-shortcut-modal-content {
-  background-color: #333;
-  padding: 25px;
+  background-color: #efebeb;
+  padding: 5px 15px 10px 15px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  color: white;
+  color: rgb(0, 0, 0);
   width: 90%;
   max-width: 350px;
 }
 
 .add-shortcut-modal-content h3 {
   margin-top: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .add-shortcut-modal-content form {
@@ -45,31 +45,31 @@
   margin-top: 5px;
   border: 1px solid #555;
   border-radius: 5px;
-  background-color: #444;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
 }
 
-.modal-buttons {
+.add-shortcut-modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 170px;
+  margin-top: 0px;
 }
 
-.modal-buttons button {
+.add-shortcut-modal-buttons button {
   padding: 10px 20px;
   font-size: 1em;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.modal-buttons button[type="submit"] {
+.add-shortcut-modal-buttons button[type="submit"] {
   background-color: #007bff;
   color: white;
   border: none;
 }
 
-.modal-buttons button[type="button"] {
+.add-shortcut-modal-buttons button[type="button"] {
   background-color: #6c757d;
   color: white;
   border: none;

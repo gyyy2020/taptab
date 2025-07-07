@@ -53,7 +53,22 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
   };
 
   const handleBackup = () => {
-    const data = JSON.stringify(localStorage);
+    const keysToBackup = ['userAvatar', 'appSettings', 'allShortcuts', 'searchEngines', 'selectedEngine', 'layouts'];
+    const backupData = {};
+
+    keysToBackup.forEach(key => {
+      const item = localStorage.getItem(key);
+      if (item) {
+        try {
+          // Attempt to parse if it's a JSON string, otherwise keep as is
+          backupData[key] = JSON.parse(item);
+        } catch (e) {
+          backupData[key] = item; // Not a JSON string, store as is
+        }
+      }
+    });
+
+    const data = JSON.stringify(backupData, null, 2); // Pretty print JSON
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -74,14 +89,15 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
           const importedData = JSON.parse(event.target.result);
           if (window.confirm("Importing settings will overwrite current settings. Continue?")) {
             for (const key in importedData) {
-              localStorage.setItem(key, importedData[key]);
+              const value = importedData[key];
+              // If the value is an object, stringify it before storing in localStorage
+              localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : value);
             }
             alert("Settings imported successfully! Please refresh the page.");
-            // Optionally, trigger a full page reload to apply all settings
-            // window.location.reload();
+            window.location.reload(); // Trigger a full page reload to apply all settings
           }
         } catch (error) {
-          alert("Failed to import settings: Invalid file format.");
+          alert(`Failed to import settings: ${error.message}. Please ensure the file is a valid backup JSON.`);
           console.error("Import error:", error);
         }
       };
@@ -183,8 +199,8 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
 
       <div className="settings-section">
         <h3>About</h3>
-        <p>New Tab Extension v1.0.0</p>
-        <p>Developed by Gemini CLI</p>
+        <p>The Greatest Tab Extension v1.0.0</p>
+        <p>Developed by LoveHipper</p>
       </div>
 
 

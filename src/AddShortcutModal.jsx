@@ -39,7 +39,7 @@ const AddShortcutModal = ({ visible, onSave, onCancel }) => {
               required
             />
           </label>
-          <div className="modal-buttons">
+          <div className="add-shortcut-modal-buttons">
             <button type="submit">Save</button>
             <button type="button" onClick={onCancel}>Cancel</button>
           </div>

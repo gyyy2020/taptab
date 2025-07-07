@@ -49,7 +49,10 @@ const initialAllShortcuts = {
 
 function App() {
   const [selectedShortcutCategory, setSelectedShortcutCategory] = useState('Common');
-  const [selectedTimeZone, setSelectedTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone); // Default to local timezone
+  const [selectedTimeZone, setSelectedTimeZone] = useState(() => {
+    const savedTimeZone = localStorage.getItem('selectedTimeZone');
+    return savedTimeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  });
 
   const [allShortcuts, setAllShortcuts] = useState(() => {
     const savedShortcuts = localStorage.getItem('allShortcuts');
@@ -147,6 +150,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('layouts', JSON.stringify(layouts));
   }, [layouts]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedTimeZone', selectedTimeZone);
+  }, [selectedTimeZone]);
 
   const onLayoutChange = (layout, allLayouts) => {
     setLayouts(allLayouts);

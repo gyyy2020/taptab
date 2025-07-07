@@ -34,7 +34,7 @@ function SearchEngineMenu({ isVisible, onSelectEngine, searchEngines, onAddEngin
           </li>
         ))}
         <li className="add-new" onClick={onAddEngineClick}>
-          + Add New
+          + Add
         </li>
       </ul>
     </div>
