@@ -252,9 +252,26 @@ function App() {
     handleCloseBackgroundContextMenu();
   };
 
+  const wallpaperInputRef = useRef(null);
+
   const handleChangeWallpaper = () => {
-    alert('Change Wallpaper clicked!');
+    wallpaperInputRef.current.click();
     handleCloseBackgroundContextMenu();
+  };
+
+  const handleWallpaperChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setAppSettings(prevSettings => ({
+          ...prevSettings,
+          wallpaper: event.target.result,
+          wallpaperFileName: file.name
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSaveSettings = (newSettings) => {
@@ -424,6 +441,13 @@ function App() {
         onClose={handleCloseSettings}
         onSettingChange={handleSaveSettings}
         currentSettings={appSettings}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        ref={wallpaperInputRef}
+        onChange={handleWallpaperChange}
+        style={{ display: 'none' }}
       />
     </div>
   );
