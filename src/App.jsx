@@ -10,6 +10,7 @@ import './App.css';
 import './GridLayout.css'; // Import the new CSS file
 import BirthdayWidget from './BirthdayWidget';
 import YearProgressWidget from './YearProgressWidget';
+import WeatherWidget from './WeatherWidget';
 
 const initialAllShortcuts = {
   Common: [
@@ -213,6 +214,7 @@ function App() {
         onCategoryChange={handleCategoryChange}
         onShowContextMenu={handleSidebarContextMenu}
       />
+      <WeatherWidget />
       <div className="main-content" ref={mainContentRef}>
         <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />
         <DateTimeDisplay ref={dateTimeRef} timeZone={selectedTimeZone} />

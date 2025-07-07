@@ -1,0 +1,146 @@
+.weather-widget {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #fff;
+  color: rgb(0, 0, 0);
+  padding: 12px 6px 12px 6px;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  z-index: 1000; /* Ensure it's above other content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer; /* Indicate it's clickable */
+  min-width: 180px; /* Minimum width for the widget */
+}
+
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.weather-header h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.weather-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.weather-city {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #3a8dde;
+}
+
+.weather-forecast {
+  display: flex;
+  flex-direction: column; /* Vertical layout for days */
+  gap: 0px;
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: row; /* Day, icon, temp in a row */
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.day-name {
+  font-size:0.98em;
+  font-weight: bold;
+  flex: 1;
+  text-align: left;
+}
+
+.day-icon {
+  font-size: 1.5em;
+  margin: 0 10px;
+}
+
+.day-temp {
+  font-size:1em;
+  flex: 1;
+  text-align: right;
+  color:#3a8dde;
+}
+
+.weather-widget button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.weather-widget button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #ffdddd;
+  background-color: #dc3545;
+  padding: 5px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+/* Modal Styles */
+.weather-widget-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(114, 114, 114, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Above everything else */
+}
+
+.weather-widget-modal-content {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: white;
+  width: 90%;
+  max-width: 350px;
+}
+
+.weather-widget-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.weather-widget-modal-content input[type="text"] {
+  width: calc(100% - 20px); /* Adjust for padding */
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background-color: #444;
+  color: white;
+}
+
+.weather-widget-modal-content input[type="text"]::placeholder {
+  color: #bbb;
+}
+
+.modal-buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 1em;
+}
