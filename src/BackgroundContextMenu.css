@@ -1,0 +1,24 @@
+.background-context-menu {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid #555;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  color: black;
+}
+
+.background-context-menu ul {
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+}
+
+.background-context-menu li {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.background-context-menu li:hover {
+  background-color: hsl(236, 79%, 83%);
+}

@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import ReactDOM from 'react-dom';
 import CategoryContextMenu from './CategoryContextMenu';
 import ShortcutContextMenu from './ShortcutContextMenu';
+import BackgroundContextMenu from './BackgroundContextMenu';
+import AddShortcutModal from './AddShortcutModal';
 import EditShortcutModal from './EditShortcutModal';
 import TimeZoneSelector from './TimeZoneSelector';
 import DateTimeDisplay from './DateTimeDisplay';
@@ -69,7 +71,26 @@ function App() {
   const dateTimeRef = useRef(null);
   const searchBarRef = useRef(null);
   const mottoRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const weatherWidgetRef = useRef(null);
   const [shortcutsHeight, setShortcutsHeight] = useState(0);
+
+  // Context menu state and handlers for category
+  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, category: null, onEdit: null, onDelete: null });
+
+  // Pass handler to Sidebar to trigger context menu at root
+  const handleSidebarContextMenu = (x, y, category, onEdit, onDelete) => {
+    setContextMenu({
+      visible: true,
+      x,
+      y,
+      category,
+      onEdit: () => { onEdit(category); setContextMenu((c) => ({ ...c, visible: false })); },
+      onDelete: () => { onDelete(category); setContextMenu((c) => ({ ...c, visible: false })); },
+    });
+  };
+
+  const handleCloseContextMenu = () => setContextMenu((c) => ({ ...c, visible: false }));
 
   useEffect(() => {
     const calculateShortcutsHeight = () => {
@@ -191,27 +212,54 @@ function App() {
     }
   };
 
-  // Context menu state and handlers for category
+  
 
-  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, category: null, onEdit: null, onDelete: null });
-
-  // Pass handler to Sidebar to trigger context menu at root
-  const handleSidebarContextMenu = (x, y, category, onEdit, onDelete) => {
-    setContextMenu({
-      visible: true,
-      x,
-      y,
-      category,
-      onEdit: () => { onEdit(category); setContextMenu((c) => ({ ...c, visible: false })); },
-      onDelete: () => { onDelete(category); setContextMenu((c) => ({ ...c, visible: false })); },
-    });
-  };
-
-  const handleCloseContextMenu = () => setContextMenu((c) => ({ ...c, visible: false }));
+  
 
   const [shortcutContextMenu, setShortcutContextMenu] = useState({ visible: false, x: 0, y: 0, shortcut: null });
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editingShortcut, setEditingShortcut] = useState(null);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [backgroundContextMenu, setBackgroundContextMenu] = useState({ visible: false, x: 0, y: 0 });
+
+  const handleShowAddShortcutModal = () => {
+    setIsAddModalVisible(true);
+    handleCloseBackgroundContextMenu();
+  };
+
+  const handleBackgroundContextMenu = (e) => {
+    e.preventDefault();
+    setBackgroundContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+  };
+
+  const handleCloseBackgroundContextMenu = () => {
+    setBackgroundContextMenu({ visible: false, x: 0, y: 0 });
+  };
+
+  const handleSetting = () => {
+    alert('Setting clicked!');
+    handleCloseBackgroundContextMenu();
+  };
+
+  const handleChangeWallpaper = () => {
+    alert('Change Wallpaper clicked!');
+    handleCloseBackgroundContextMenu();
+  };
+
+  const handleSaveNewShortcut = ({ name, url }) => {
+    const newShortcut = {
+      i: `new-${new Date().getTime()}`,
+      x: (allShortcuts[selectedShortcutCategory].length * 2) % 12,
+      y: Infinity, // This will be handled by react-grid-layout
+      w: 1,
+      h: 1,
+      name,
+      url,
+    };
+    const updatedShortcuts = [...allShortcuts[selectedShortcutCategory], newShortcut];
+    setAllShortcuts({ ...allShortcuts, [selectedShortcutCategory]: updatedShortcuts });
+    setIsAddModalVisible(false);
+  };
 
   const handleShortcutContextMenu = (e, shortcut) => {
     e.preventDefault();
@@ -251,14 +299,43 @@ function App() {
     handleCloseShortcutContextMenu();
   };
 
+  const handleGlobalContextMenu = (e) => {
+    e.preventDefault();
+
+    // Check if the click is on a shortcut element
+    const shortcutElement = e.target.closest('.shortcut-app');
+    if (shortcutElement) {
+      // Find the shortcut object based on the element's data-grid-id or similar
+      // This assumes you have a way to map the DOM element back to your shortcut data
+      // For now, we'll just prevent default and let the shortcut's own handler take over
+      return;
+    }
+
+    // Check if the click is on the sidebar
+    if (sidebarRef.current && sidebarRef.current.contains(e.target)) {
+      // Sidebar has its own context menu handling
+      return;
+    }
+
+    // Check if the click is on the weather widget
+    if (weatherWidgetRef.current && weatherWidgetRef.current.contains(e.target)) {
+      // Weather widget has its own click handling, no context menu needed here
+      return;
+    }
+
+    // If not on a specific element, show the background context menu
+    setBackgroundContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+  };
+
   return (
-    <div className="app-container">
+    <div className="app-container" onContextMenu={handleGlobalContextMenu}>
       <Sidebar
+        ref={sidebarRef}
         onSelectCategory={setSelectedShortcutCategory}
         onCategoryChange={handleCategoryChange}
         onShowContextMenu={handleSidebarContextMenu}
       />
-      <WeatherWidget />
+      <WeatherWidget ref={weatherWidgetRef} />
       <div className="main-content" ref={mainContentRef}>
         <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />
         <DateTimeDisplay ref={dateTimeRef} timeZone={selectedTimeZone} />
@@ -300,6 +377,20 @@ function App() {
         shortcut={editingShortcut}
         onSave={handleSaveShortcut}
         onCancel={() => setIsEditModalVisible(false)}
+      />
+      <AddShortcutModal
+        visible={isAddModalVisible}
+        onSave={handleSaveNewShortcut}
+        onCancel={() => setIsAddModalVisible(false)}
+      />
+      <BackgroundContextMenu
+        x={backgroundContextMenu.x}
+        y={backgroundContextMenu.y}
+        visible={backgroundContextMenu.visible}
+        onAddShortcut={handleShowAddShortcutModal}
+        onSetting={handleSetting}
+        onChangeWallpaper={handleChangeWallpaper}
+        onClose={handleCloseBackgroundContextMenu}
       />
     </div>
   );

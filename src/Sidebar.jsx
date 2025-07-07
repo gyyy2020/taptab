@@ -31,6 +31,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu }) => {
 
   const handleCategoryRightClick = (e, category) => {
     e.preventDefault();
+    e.stopPropagation(); // Stop event propagation
     if (onShowContextMenu) {
       onShowContextMenu(
         e.clientX,
