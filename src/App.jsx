@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import ReactDOM from 'react-dom';
 import CategoryContextMenu from './CategoryContextMenu';
+import ShortcutContextMenu from './ShortcutContextMenu';
+import EditShortcutModal from './EditShortcutModal';
 import TimeZoneSelector from './TimeZoneSelector';
 import DateTimeDisplay from './DateTimeDisplay';
 import SearchBar from './SearchBar';
@@ -207,6 +209,48 @@ function App() {
 
   const handleCloseContextMenu = () => setContextMenu((c) => ({ ...c, visible: false }));
 
+  const [shortcutContextMenu, setShortcutContextMenu] = useState({ visible: false, x: 0, y: 0, shortcut: null });
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editingShortcut, setEditingShortcut] = useState(null);
+
+  const handleShortcutContextMenu = (e, shortcut) => {
+    e.preventDefault();
+    setShortcutContextMenu({ visible: true, x: e.clientX, y: e.clientY, shortcut });
+  };
+
+  const handleCloseShortcutContextMenu = () => {
+    setShortcutContextMenu({ visible: false, x: 0, y: 0, shortcut: null });
+  };
+
+  const handleEditShortcut = () => {
+    const { shortcut } = shortcutContextMenu;
+    if (!shortcut) return;
+
+    setEditingShortcut(shortcut);
+    setIsEditModalVisible(true);
+    handleCloseShortcutContextMenu();
+  };
+
+  const handleSaveShortcut = (updatedShortcut) => {
+    const updatedShortcuts = allShortcuts[selectedShortcutCategory].map(s =>
+      s.i === updatedShortcut.i ? updatedShortcut : s
+    );
+    setAllShortcuts({ ...allShortcuts, [selectedShortcutCategory]: updatedShortcuts });
+    setIsEditModalVisible(false);
+    setEditingShortcut(null);
+  };
+
+  const handleDeleteShortcut = () => {
+    const { shortcut } = shortcutContextMenu;
+    if (!shortcut) return;
+
+    if (window.confirm(`Are you sure you want to delete ${shortcut.name}?`)) {
+      const updatedShortcuts = allShortcuts[selectedShortcutCategory].filter(s => s.i !== shortcut.i);
+      setAllShortcuts({ ...allShortcuts, [selectedShortcutCategory]: updatedShortcuts });
+    }
+    handleCloseShortcutContextMenu();
+  };
+
   return (
     <div className="app-container">
       <Sidebar
@@ -225,6 +269,7 @@ function App() {
           layouts={layouts}
           onLayoutChange={onLayoutChange}
           height={shortcutsHeight}
+          onShortcutContextMenu={handleShortcutContextMenu}
         />
         <div className="motto-line" ref={mottoRef}>
           <p>"The only way to do great work is to love what you do." - Steve Jobs</p>
@@ -242,6 +287,20 @@ function App() {
           />, document.getElementById('context-menu-root')
         )
       }
+      <ShortcutContextMenu
+        x={shortcutContextMenu.x}
+        y={shortcutContextMenu.y}
+        visible={shortcutContextMenu.visible}
+        onEdit={handleEditShortcut}
+        onDelete={handleDeleteShortcut}
+        onClose={handleCloseShortcutContextMenu}
+      />
+      <EditShortcutModal
+        visible={isEditModalVisible}
+        shortcut={editingShortcut}
+        onSave={handleSaveShortcut}
+        onCancel={() => setIsEditModalVisible(false)}
+      />
     </div>
   );
 }

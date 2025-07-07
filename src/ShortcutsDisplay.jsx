@@ -8,7 +8,7 @@ import YearProgressWidget from './YearProgressWidget';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height }) => {
+const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height, onShortcutContextMenu }) => {
   const currentLayout = layouts[category] || shortcuts.map(s => ({ i: s.i, x: s.x, y: s.y, w: s.w, h: s.h }));
   const isDraggingRef = useRef(false);
   const hasDraggedRef = useRef(false);
@@ -54,7 +54,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
         isResizable={true}
       >
         {shortcuts.map((shortcut) => (
-          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }} className="shortcut-app">
+          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }} className="shortcut-app" onContextMenu={(e) => onShortcutContextMenu(e, shortcut)}>
             {shortcut.component === 'BirthdayWidget' ? (
               <BirthdayWidget
                 onClick={handleClick}
