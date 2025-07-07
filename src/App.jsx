@@ -225,11 +225,12 @@ function App() {
   const [isSettingsPageVisible, setIsSettingsPageVisible] = useState(false);
   const [appSettings, setAppSettings] = useState(() => {
     const savedSettings = localStorage.getItem('appSettings');
-    return savedSettings ? JSON.parse(savedSettings) : {};
+    return savedSettings ? { ...JSON.parse(savedSettings), simpleMode: JSON.parse(savedSettings).simpleMode || false } : { simpleMode: false };
   });
 
   useEffect(() => {
     localStorage.setItem('appSettings', JSON.stringify(appSettings));
+    console.log('App.jsx - appSettings.simpleMode:', appSettings.simpleMode);
   }, [appSettings]);
 
   const handleShowAddShortcutModal = () => {
@@ -347,30 +348,36 @@ function App() {
 
   return (
     <div className="app-container" onContextMenu={handleGlobalContextMenu} style={appSettings.wallpaper ? { backgroundImage: `url(${appSettings.wallpaper})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
-      <Sidebar
-        ref={sidebarRef}
-        onSelectCategory={setSelectedShortcutCategory}
-        onCategoryChange={handleCategoryChange}
-        onShowContextMenu={handleSidebarContextMenu}
-        onShowSettings={handleSetting}
-      />
-      <WeatherWidget ref={weatherWidgetRef} />
-      <div className="main-content" ref={mainContentRef}>
-        <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />
+      {!appSettings.simpleMode && (
+        <Sidebar
+          ref={sidebarRef}
+          onSelectCategory={setSelectedShortcutCategory}
+          onCategoryChange={handleCategoryChange}
+          onShowContextMenu={handleSidebarContextMenu}
+          onShowSettings={handleSetting}
+        />
+      )}
+      {!appSettings.simpleMode && <WeatherWidget ref={weatherWidgetRef} />}
+      <div className={`main-content ${appSettings.simpleMode ? 'simple-mode' : ''}`} ref={mainContentRef}>
+        {appSettings.simpleMode ? null : <TimeZoneSelector onSelectTimeZone={setSelectedTimeZone} />}
         <DateTimeDisplay ref={dateTimeRef} timeZone={selectedTimeZone} />
         <SearchBar ref={searchBarRef} openInNewTab={appSettings.openSearchResultsInNewTab} />
-        <ShortcutsDisplay
-          category={selectedShortcutCategory}
-          shortcuts={allShortcuts[selectedShortcutCategory]}
-          layouts={layouts}
-          onLayoutChange={onLayoutChange}
-          height={shortcutsHeight}
-          onShortcutContextMenu={handleShortcutContextMenu}
-          openInNewTab={appSettings.openShortcutsInNewTab}
-        />
-        <div className="motto-line" ref={mottoRef}>
-          <p>"The only way to do great work is to love what you do." - Steve Jobs</p>
-        </div>
+        {!appSettings.simpleMode && (
+          <ShortcutsDisplay
+            category={selectedShortcutCategory}
+            shortcuts={allShortcuts[selectedShortcutCategory]}
+            layouts={layouts}
+            onLayoutChange={onLayoutChange}
+            height={shortcutsHeight}
+            onShortcutContextMenu={handleShortcutContextMenu}
+            openInNewTab={appSettings.openShortcutsInNewTab}
+          />
+        )}
+        {!appSettings.simpleMode && (
+          <div className="motto-line" ref={mottoRef}>
+            <p>{appSettings.mottoText || ""}</p>
+          </div>
+        )}
       </div>
       {typeof window !== 'undefined' && document.getElementById('context-menu-root') &&
         ReactDOM.createPortal(

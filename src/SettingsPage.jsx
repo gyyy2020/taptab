@@ -92,101 +92,104 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
 
   return (
     <div className={`settings-page-content ${visible ? 'visible' : ''}`} ref={settingsRef}>
-        <h2>Settings</h2>
-        <div className="settings-section">
-          <h3>General</h3>
-          <label>
-            <input
-              type="checkbox"
-              name="openShortcutsInNewTab"
-              checked={tempSettings.openShortcutsInNewTab || false}
-              onChange={handleChange}
-            />
-            Open shortcuts in new tab
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="openSearchResultsInNewTab"
-              checked={tempSettings.openSearchResultsInNewTab || false}
-              onChange={handleChange}
-            />
-            Open search results in new tab
-          </label>
-          <label>
-            Motto:
-            <input
-              type="text"
-              name="mottoText"
-              value={tempSettings.mottoText || ''}
-              onChange={handleChange}
-              placeholder="Enter your motto"
-            />
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="simpleMode"
-              checked={tempSettings.simpleMode || false}
-              onChange={handleChange}
-            />
-            Simple Mode (Search box only, centered)
-          </label>
-        </div>
+      <h2>Settings</h2>
+      <div className="settings-section">
+        <h3>General</h3>
+        <label>
+          <input
+            type="checkbox"
+            name="openShortcutsInNewTab"
+            checked={tempSettings.openShortcutsInNewTab || false}
+            onChange={handleChange}
+          />
+          Open shortcuts in new tab
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            name="openSearchResultsInNewTab"
+            checked={tempSettings.openSearchResultsInNewTab || false}
+            onChange={handleChange}
+          />
+          Open search results in new tab
+        </label>
 
-        <div className="settings-section">
-          <h3>Appearance</h3>
-          <label>
-            Font Size (Date/Time):
-            <input
-              type="range"
-              name="dateTimeFontSize"
-              min="10" // Example min font size
-              max="50" // Example max font size
-              value={tempSettings.dateTimeFontSize || 24} // Default value
-              onChange={handleChange}
-            />
-            <span>{tempSettings.dateTimeFontSize || 24}px</span>
-          </label>
-          <label>
-            Select Local Picture:
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onload = (event) => {
-                    onSettingChange({ ...tempSettings, wallpaper: event.target.result, wallpaperFileName: file.name });
-                  };
-                  reader.readAsDataURL(file);
-                }
-              }}
-            />
-          </label>
-        </div>
-
-        <div className="settings-section">
-          <h3>Data Management</h3>
-          <button onClick={handleBackup}>Backup Settings</button>
-          <label className="import-button">
-            Import Settings
-            <input type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
-          </label>
-          <button onClick={handleReset}>Reset All Settings</button>
-        </div>
-
-        <div className="settings-section">
-          <h3>About</h3>
-          <p>New Tab Extension v1.0.0</p>
-          <p>Developed by Gemini CLI</p>
-        </div>
-
-        <div className="settings-actions">
-          <button onClick={onClose}>Close</button>
-        </div>
       </div>
+
+      <div className="settings-section">
+        <h3>Appearance</h3>
+        <label>
+          Font Size (Date/Time):
+          <input
+            type="range"
+            name="dateTimeFontSize"
+            min="10" // Example min font size
+            max="50" // Example max font size
+            value={tempSettings.dateTimeFontSize || 24} // Default value
+            onChange={handleChange}
+          />
+          <span>{tempSettings.dateTimeFontSize || 24}px</span>
+        </label>
+        <label>
+          Select Local Picture:
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  onSettingChange({ ...tempSettings, wallpaper: event.target.result, wallpaperFileName: file.name });
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+        </label>
+      </div>
+
+      <div className="settings-section">
+        <h3>Layout</h3>
+        <label>
+          <input
+            type="checkbox"
+            name="simpleMode"
+            checked={tempSettings.simpleMode || false}
+            onChange={handleChange}
+          />
+          Simple Mode (Search box only, centered)
+        </label>
+        <label>
+          Motto:
+          <input
+            type="text"
+            name="mottoText"
+            value={tempSettings.mottoText || ''}
+            onChange={handleChange}
+            placeholder="Enter your motto"
+          />
+        </label>
+      </div>
+
+      <div className="settings-section">
+        <h3>Data Management</h3>
+        <button onClick={handleBackup}>Backup Settings</button>
+        <label className="import-button">
+          Import Settings
+          <input type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
+        </label>
+        <button onClick={handleReset}>Reset All Settings</button>
+      </div>
+
+      <div className="settings-section">
+        <h3>About</h3>
+        <p>New Tab Extension v1.0.0</p>
+        <p>Developed by Gemini CLI</p>
+      </div>
+
+
+    </div>
   );
 };
 
