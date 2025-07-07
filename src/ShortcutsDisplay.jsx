@@ -3,6 +3,8 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import './ShortcutsDisplay.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import BirthdayWidget from './BirthdayWidget';
+import YearProgressWidget from './YearProgressWidget';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -53,17 +55,26 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
       >
         {shortcuts.map((shortcut) => (
           <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }} className="shortcut-app">
-            <a
-              href={shortcut.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shortcut-link"
-              onClick={handleClick}
-              onDragStart={(e) => e.preventDefault()} // Prevents browser's default drag behavior for links
-            >
-              <img src={`https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=32`} alt="" className="shortcut-icon" />
-              <span className="shortcut-name">{shortcut.name}</span>
-            </a>
+            {shortcut.component === 'BirthdayWidget' ? (
+              <BirthdayWidget
+                onClick={handleClick}
+                onDragStart={(e) => e.preventDefault()} // Prevents browser's default drag behavior for links
+              />
+            ) : shortcut.component === 'YearProgressWidget' ? (
+              <YearProgressWidget w={shortcut.w} h={shortcut.h} />
+            ) : (
+              <a
+                href={shortcut.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shortcut-link"
+                onClick={handleClick}
+                onDragStart={(e) => e.preventDefault()} // Prevents browser's default drag behavior for links
+              >
+                <img src={`https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=32`} alt="" className="shortcut-icon" />
+                <span className="shortcut-name">{shortcut.name}</span>
+              </a>
+            )}
           </div>
         ))}
       </ResponsiveGridLayout>

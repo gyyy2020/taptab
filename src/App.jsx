@@ -8,12 +8,16 @@ import SearchBar from './SearchBar';
 import ShortcutsDisplay from './ShortcutsDisplay';
 import './App.css';
 import './GridLayout.css'; // Import the new CSS file
+import BirthdayWidget from './BirthdayWidget';
+import YearProgressWidget from './YearProgressWidget';
 
 const initialAllShortcuts = {
   Common: [
     { i: 'google', x: 0, y: 0, w: 1, h: 1, name: 'Google', url: 'https://www.google.com' },
     { i: 'youtube', x: 1, y: 0, w: 1, h: 1, name: 'YouTube', url: 'https://www.youtube.com' },
     { i: 'facebook', x: 2, y: 0, w: 1, h: 1, name: 'Facebook', url: 'https://www.facebook.com' },
+    { i: 'birthday-widget', x: 3, y: 0, w: 1, h: 1, name: 'Birthday', component: 'BirthdayWidget' },
+    { i: 'year-progress-widget', x: 4, y: 0, w: 1, h: 1, name: 'Year Progress', component: 'YearProgressWidget' },
   ],
   AI: [
     { i: 'chatgpt', x: 0, y: 0, w: 1, h: 1, name: 'ChatGPT', url: 'https://chat.openai.com' },
@@ -43,7 +47,14 @@ function App() {
 
   const [allShortcuts, setAllShortcuts] = useState(() => {
     const savedShortcuts = localStorage.getItem('allShortcuts');
-    return savedShortcuts ? JSON.parse(savedShortcuts) : initialAllShortcuts;
+    let shortcuts = savedShortcuts ? JSON.parse(savedShortcuts) : initialAllShortcuts;
+
+    // Ensure birthday-widget is always in Common category
+    if (shortcuts.Common && !shortcuts.Common.some(s => s.i === 'birthday-widget')) {
+      shortcuts.Common.push({ i: 'birthday-widget', x: 3, y: 0, w: 2, h: 2, name: 'Birthday', component: 'BirthdayWidget' });
+    }
+
+    return shortcuts;
   });
 
   const [layouts, setLayouts] = useState(() => {

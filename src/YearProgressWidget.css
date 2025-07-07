@@ -1,0 +1,44 @@
+.year-progress-widget-horizontal {
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.year-progress-widget-horizontal .progress-item {
+  margin: 0 5px;
+  flex-grow: 1;
+}
+
+.year-progress-widget-vertical {
+  flex-direction: column;
+}
+
+.year-progress-widget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  color: rgb(0, 0, 0);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+}
+
+.progress-label {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.progress-value {
+  font-size: 1.5em;
+  font-weight: bold;
+}

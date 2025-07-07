@@ -1,0 +1,51 @@
+.birthday-widget {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  color: rgb(0, 0, 0);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  cursor: pointer;
+  height: 100%; /* Ensure it fills the grid item */
+  width: 100%; /* Ensure it fills the grid item */
+  box-sizing: border-box; /* Include padding in width/height */
+}
+
+.birthday-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.days-text {
+  font-size: 0.8em;
+  margin-bottom: 5px;
+}
+
+.days-number {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.birthday-prompt {
+  font-size: 1em;
+  opacity: 0.7;
+}
+
+.birthday-input-visible {
+  width: 80%;
+  padding: 5px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+}
