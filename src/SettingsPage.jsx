@@ -63,7 +63,6 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    alert("Settings backed up successfully!");
   };
 
   const handleImport = (e) => {

@@ -3,7 +3,10 @@ import CategoryContextMenu from './CategoryContextMenu';
 import './Sidebar.css';
 
 const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShowSettings }) => {
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(() => {
+    const savedAvatar = localStorage.getItem('userAvatar');
+    return savedAvatar ? savedAvatar : null;
+  });
   const fileInputRef = useRef(null);
   const [shortcuts, setShortcuts] = useState(["Common", "AI", "Code", "Info", "Learn", "Fun"]);
   const [selectedCategory, setSelectedCategory] = useState("Common"); // Default selected category
@@ -19,6 +22,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
       const reader = new FileReader();
       reader.onload = () => {
         setAvatar(reader.result);
+        localStorage.setItem('userAvatar', reader.result);
       };
       reader.readAsDataURL(file);
     }
