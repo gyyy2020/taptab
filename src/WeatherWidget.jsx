@@ -94,7 +94,9 @@ const WeatherWidget = () => {
           temp: `${Math.round(data.daily.temperature_2m_max[index])}°C / ${Math.round(data.daily.temperature_2m_min[index])}°C`,
         }));
 
-        setWeatherData({ city: targetCity, forecast: dailyForecast });
+        const newWeatherData = { city: targetCity, forecast: dailyForecast, timestamp: new Date().getTime() };
+        setWeatherData(newWeatherData);
+        localStorage.setItem('weatherData', JSON.stringify(newWeatherData));
         localStorage.setItem('weatherCity', targetCity); // Save successful city to localStorage
       } else {
         setError(data.reason || 'Failed to fetch weather data.');
@@ -109,6 +111,16 @@ const WeatherWidget = () => {
 
   useEffect(() => {
     if (city) {
+      const cachedData = localStorage.getItem('weatherData');
+      if (cachedData) {
+        const { city: cachedCity, timestamp, ...rest } = JSON.parse(cachedData);
+        const now = new Date().getTime();
+        // Cache is valid for 1 hour
+        if (cachedCity === city && (now - timestamp) < 3600000) {
+          setWeatherData({ city: cachedCity, ...rest });
+          return;
+        }
+      }
       fetchWeatherData(city);
     } else {
       // If no city is set, show the modal to prompt for input
