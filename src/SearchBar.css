@@ -1,5 +1,7 @@
 .search-bar-container {
   position: relative;
+  backdrop-filter: blur(12px);
+  z-index: 1;
   display: flex;
   align-items: center;
   width: 600px; /* Adjust as needed */
@@ -7,6 +9,7 @@
   border-radius: 25px;
   padding: 5px 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color:rgba(255,255,255,0.5);
 }
 
 .search-input {

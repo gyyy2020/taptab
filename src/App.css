@@ -42,15 +42,18 @@
   top: 20px;
   left: 20px;
   z-index: 10;
+  border:none;
+  outline:none;
+  appearance:auto;
 }
 
 .datetime-display .time {
-  font-size: 4em;
+  font-size: 6em;
   font-weight: bold;
 }
 
 .datetime-display .date {
-  font-size: 1.5em;
+  font-size: 1.7em;
 }
 
 .datetime-display,
