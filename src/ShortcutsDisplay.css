@@ -1,19 +1,11 @@
 .shortcuts-display {
-  padding: 20px;
+  padding: 0px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   width: 98%;
   box-sizing: border-box;
 }
-
-/* .shortcuts-display h2 {
-  color: #333;
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.8em;
-  text-align: center;
-} */
 
 .shortcuts-display ul {
   list-style: none;
