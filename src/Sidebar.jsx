@@ -103,7 +103,20 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu }) => {
       </div>
       {/* Context menu is now rendered at the root via portal */}
       <div id="context-menu-root" />
-      <div className="add-button">
+      <div className="add-button" onClick={() => {
+        const newCategory = prompt('Enter new category name:');
+        if (newCategory && !shortcuts.includes(newCategory)) {
+          const updatedShortcuts = [...shortcuts, newCategory];
+          setShortcuts(updatedShortcuts);
+          setSelectedCategory(newCategory);
+          onSelectCategory(newCategory);
+          if (onCategoryChange) {
+            onCategoryChange(updatedShortcuts, 'add', null, newCategory);
+          }
+        } else if (newCategory) {
+          alert('Category already exists or name is invalid.');
+        }
+      }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"

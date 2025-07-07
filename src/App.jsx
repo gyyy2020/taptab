@@ -129,8 +129,14 @@ function App() {
     });
   };
 
-  // Handler to sync category changes from Sidebar (edit/delete)
+  // Handler to sync category changes from Sidebar (add/edit/delete)
   const handleCategoryChange = (newCategoryList, action, oldCategory, newCategory) => {
+    // If a category is added, add an empty shortcuts array and layout
+    if (action === 'add' && newCategory) {
+      setAllShortcuts(prev => ({ ...prev, [newCategory]: [] }));
+      setLayouts(prev => ({ ...prev, [newCategory]: [] }));
+      setSelectedShortcutCategory(newCategory);
+    }
     // If a category is renamed, update allShortcuts and layouts keys
     if (action === 'edit' && oldCategory && newCategory) {
       setAllShortcuts(prev => {
