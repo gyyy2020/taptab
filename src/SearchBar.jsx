@@ -40,24 +40,6 @@ const SearchBar = React.forwardRef((props, ref) => {
   const searchBarRef = useRef(null);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
-        setIsMenuVisible(false);
-      }
-    }
-
-    if (isMenuVisible) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isMenuVisible]);
-
-  useEffect(() => {
     localStorage.setItem('searchEngines', JSON.stringify(searchEngines));
     console.log('Saved searchEngines to localStorage:', searchEngines);
   }, [searchEngines]);
