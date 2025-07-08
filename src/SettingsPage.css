@@ -23,13 +23,13 @@
 
 .settings-page-content h2 {
   margin-top: 0;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   text-align: center;
 }
 
 .settings-section {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 5px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #555;
 }
 
@@ -39,14 +39,14 @@
 
 .settings-section h3 {
   margin-top: 0;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   color: #007bff;
 }
 
 .settings-section label {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   cursor: pointer;
   font-size: 1.5em;
 }
