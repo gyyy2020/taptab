@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   width: 600px; /* Adjust as needed */
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   border-radius: 25px;
   padding: 5px 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);

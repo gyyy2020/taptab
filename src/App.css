@@ -42,9 +42,13 @@
   top: 20px;
   left: 20px;
   z-index: 10;
+}
+
+.timezone-selector select{
   border:none;
+  border-radius:5px;
   outline:none;
-  appearance:auto;
+  background-color: rgba(240, 248, 255, 0.8);
 }
 
 .datetime-display .time {

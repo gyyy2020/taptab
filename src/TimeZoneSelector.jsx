@@ -18,7 +18,7 @@ const TimeZoneSelector = ({ onSelectTimeZone }) => {
     { name: 'Chicago', iana: 'America/Chicago' },
     { name: 'Denver', iana: 'America/Denver' },
     { name: 'Vancouver', iana: 'America/Vancouver' },
-    { name: 'Rio de Janeiro', iana: 'America/Rio_de_Janeiro' },
+    { name: 'Rio de Janeiro', iana: 'America/Sao_Paulo' },
     { name: 'Cairo', iana: 'Africa/Cairo' },
     { name: 'Johannesburg', iana: 'Africa/Johannesburg' },
     { name: 'Mumbai', iana: 'Asia/Kolkata' },
