@@ -6,7 +6,7 @@ const WeatherWidget = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showCityInputModal, setShowCityInputModal] = useState(!city); // Show modal if no city is set
+  const [showCityInputModal, setShowCityInputModal] = useState(() => !city);
   const [currentCityInput, setCurrentCityInput] = useState(city);
 
   // Helper to map Open-Meteo weather codes to emojis
@@ -122,91 +122,93 @@ const WeatherWidget = () => {
         }
       }
       fetchWeatherData(city);
-    } else {
-      // If no city is set, show the modal to prompt for input
-      setShowCityInputModal(true);
-    }
-  }, [city]); // Re-fetch when city changes
+      }
+  }, [city]);
 
   const handleWidgetClick = () => {
+    console.log('handleWidgetClick: Opening modal');
     setShowCityInputModal(true);
     setCurrentCityInput(city); // Pre-fill modal input with current city
   };
 
   const handleCityInputSubmit = (e) => {
     e.preventDefault();
+    console.log('handleCityInputSubmit: Attempting to save city', currentCityInput);
     if (currentCityInput.trim()) {
       setCity(currentCityInput.trim()); // This will trigger useEffect to fetch weather
       setShowCityInputModal(false);
+      console.log('handleCityInputSubmit: City saved, modal closed');
     } else {
       setError('City name cannot be empty.');
+      console.log('handleCityInputSubmit: City name empty');
     }
   };
 
-  const handleCityInputCancel = () => {
+  const handleCityInputCancel = (e) => {
+    e.stopPropagation(); // Stop event bubbling
+    console.log('handleCityInputCancel: Closing modal');
     setShowCityInputModal(false);
-    // If no city was set initially, and user cancels, we might want to show an error or default state
-    if (!city) {
-      setError('Please set a city for weather updates.');
-    }
   };
 
-  if (showCityInputModal) {
-    return (
-      <div className="weather-widget-modal-overlay">
-        <div className="weather-widget-modal-content">
-          <h3>Set City for Weather</h3>
-          <form onSubmit={handleCityInputSubmit}>
-            <input
-              type="text"
-              value={currentCityInput}
-              onChange={(e) => setCurrentCityInput(e.target.value)}
-              placeholder="Enter city name"
-              autoFocus
-            />
-            <div className="weather-widget-modal-buttons">
-              <button type="submit">Save</button>
-              <button type="button" onClick={handleCityInputCancel}>Cancel</button>
-            </div>
-          </form>
-          {error && <p className="error-message">{error}</p>}
-        </div>
-      </div>
-    );
-  }
+  
+
+  let widgetContent;
 
   if (loading) {
-    return <div className="weather-widget" onClick={handleWidgetClick}>Loading weather...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="weather-widget" onClick={handleWidgetClick}>
+    widgetContent = <div>Loading weather...</div>;
+  } else if (error) {
+    widgetContent = (
+      <>
         <p>Error: {error}</p>
         <button onClick={handleWidgetClick}>Set City</button>
-      </div>
+      </>
     );
-  }
-
-  if (!weatherData) {
-    return <div className="weather-widget" onClick={handleWidgetClick}>Click to set city for weather.</div>;
+  } else if (!weatherData) {
+    widgetContent = <div>Click to set city for weather.</div>;
+  } else {
+    widgetContent = (
+      <>
+        <div className="weather-header">
+          <span className="weather-title">Weather</span>
+          <span className="weather-city">{weatherData.city}</span>
+        </div>
+        <div className="weather-forecast">
+          {weatherData.forecast.map((day, index) => (
+            <div key={index} className="forecast-day">
+              <span className="day-name">{day.day}</span>
+              <span className="day-icon">{day.icon}</span>
+              <span className="day-temp">{day.temp}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
   }
 
   return (
     <div className="weather-widget" onClick={handleWidgetClick}>
-      <div className="weather-header">
-        <span className="weather-title">Weather</span>
-        <span className="weather-city">{weatherData.city}</span>
-      </div>
-      <div className="weather-forecast">
-        {weatherData.forecast.map((day, index) => (
-          <div key={index} className="forecast-day">
-            <span className="day-name">{day.day}</span>
-            <span className="day-icon">{day.icon}</span>
-            <span className="day-temp">{day.temp}</span>
+      {widgetContent}
+      {showCityInputModal && (
+        <div className="weather-widget-modal-overlay">
+          <div className="weather-widget-modal-content">
+            <h3>Set City for Weather</h3>
+            <form onSubmit={handleCityInputSubmit}>
+              <input
+                type="text"
+                value={currentCityInput}
+                onChange={(e) => setCurrentCityInput(e.target.value)}
+                placeholder="Enter city name"
+                autoFocus
+              />
+              <div className="weather-widget-modal-buttons">
+                <button type="submit">Save</button>
+                <button type="button" onClick={(e) => handleCityInputCancel(e)}>Cancel</button>
+              </div>
+            </form>
+            {error && <p className="error-message">{error}</p>}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
