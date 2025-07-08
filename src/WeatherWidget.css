@@ -2,7 +2,8 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
   color: rgb(0, 0, 0);
   padding: 12px 6px 12px 6px;
   border-radius: 8px;
@@ -24,10 +25,10 @@
   margin-bottom: 0px;
 }
 
-.weather-header h3 {
+/* .weather-header h3 {
   margin: 0;
   font-size: 1.2em;
-}
+} */
 
 .weather-title {
   /* font-size: 1.2em; */
@@ -77,7 +78,7 @@
 .day-temp {
   font-size:1em;
   text-align: right;
-  color:#3a8dde;
+  color:#0480fc;
   min-width: 56px;
 }
 

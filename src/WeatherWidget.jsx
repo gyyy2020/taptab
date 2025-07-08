@@ -170,6 +170,7 @@ const WeatherWidget = () => {
       <>
         <div className="weather-header">
           <span className="weather-title">Weather</span>
+          <svg width="22" height="22" style={{verticalAlign:"middle",opacity:0.7}} viewBox="0 0 24 24"><path fill="#3a8dde" d="M6 19a7 7 0 1 1 12.9-4.1A5 5 0 1 1 18 19H6z"/></svg>
           <span className="weather-city">{weatherData.city}</span>
         </div>
         <div className="weather-forecast">
