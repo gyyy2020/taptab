@@ -67,7 +67,8 @@ const WeatherWidget = () => {
       }
     } catch (err) {
       console.error('Geocoding error:', err);
-      setError(`Could not find coordinates for "${cityName}". Please try a more specific name.`);
+      console.error(`Could not find coordinates for "${cityName}". Please try a more specific name.`);
+      setError('Network error or invalid location.');
       return null;
     }
   };

@@ -290,7 +290,7 @@ function App() {
   const [isSettingsPageVisible, setIsSettingsPageVisible] = useState(false);
   const [appSettings, setAppSettings] = useState(() => {
     const savedSettings = localStorage.getItem('appSettings');
-    return savedSettings ? { ...JSON.parse(savedSettings), simpleMode: JSON.parse(savedSettings).simpleMode || false } : { simpleMode: false, mottoText: "道阻且长，行则将至" };
+    return savedSettings ? { ...JSON.parse(savedSettings), simpleMode: JSON.parse(savedSettings).simpleMode || false } : { simpleMode: false, mottoText: "Stay hungry, stay foolish." };
   });
 
   useEffect(() => {

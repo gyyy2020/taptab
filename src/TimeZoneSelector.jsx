@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TimeZoneSelector = ({ onSelectTimeZone }) => {
   const timezones = [
@@ -34,7 +34,14 @@ const TimeZoneSelector = ({ onSelectTimeZone }) => {
     { name: 'Auckland', iana: 'Pacific/Auckland' },
   ];
 
-  const [selectedTimeZone, setSelectedTimeZone] = useState(timezones[0].iana);
+  const [selectedTimeZone, setSelectedTimeZone] = useState(() => {
+    const savedTimeZone = localStorage.getItem('selectedTimeZone');
+    return savedTimeZone || timezones[0].iana;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedTimeZone', selectedTimeZone);
+  }, [selectedTimeZone]);
 
   const handleChange = (event) => {
     const selectedIana = event.target.value;
