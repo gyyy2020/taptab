@@ -3,6 +3,7 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
+  z-index: 1; /* Ensure sidebar's children like context menu are above other elements like shortcuts area. The same logic with search bar. */
   padding: 20px;
   box-sizing: border-box;
   position: relative;
