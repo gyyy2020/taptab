@@ -48,7 +48,14 @@ const initialAllShortcuts = {
 };
 
 function App() {
-  const [selectedShortcutCategory, setSelectedShortcutCategory] = useState('Common');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return localStorage.getItem('selectedCategory') || 'Common';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedCategory', selectedCategory);
+  }, [selectedCategory]);
+
   const [selectedTimeZone, setSelectedTimeZone] = useState(() => {
     const savedTimeZone = localStorage.getItem('selectedTimeZone');
     return savedTimeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -56,15 +63,21 @@ function App() {
 
   const [allShortcuts, setAllShortcuts] = useState(() => {
     const savedShortcuts = localStorage.getItem('allShortcuts');
-    let shortcuts = savedShortcuts ? JSON.parse(savedShortcuts) : initialAllShortcuts;
-
-    // Ensure birthday-widget is always in Common category
-    if (shortcuts.Common && !shortcuts.Common.some(s => s.i === 'birthday-widget')) {
-      shortcuts.Common.push({ i: 'birthday-widget', x: 3, y: 0, w: 2, h: 2, name: 'Birthday', component: 'BirthdayWidget' });
+    if (savedShortcuts) {
+      return JSON.parse(savedShortcuts);
     }
-
-    return shortcuts;
+    return initialAllShortcuts;
   });
+
+  useEffect(() => {
+    const savedShortcuts = JSON.parse(localStorage.getItem('allShortcuts'));
+    if (savedShortcuts && savedShortcuts.Common && !savedShortcuts.hasOwnProperty('Common')) {
+      const updatedShortcuts = { ...savedShortcuts };
+      updatedShortcuts.Common = initialAllShortcuts.Common;
+      setAllShortcuts(updatedShortcuts);
+      localStorage.setItem('allShortcuts', JSON.stringify(updatedShortcuts));
+    }
+  }, []);
 
   const [layouts, setLayouts] = useState(() => {
     const savedLayouts = localStorage.getItem('layouts');
@@ -158,7 +171,7 @@ function App() {
   const onLayoutChange = (layout, allLayouts) => {
     setLayouts(allLayouts);
     setAllShortcuts(prevAllShortcuts => {
-      const newShortcutsForCategory = prevAllShortcuts[selectedShortcutCategory].map(shortcut => {
+      const newShortcutsForCategory = prevAllShortcuts[selectedCategory].map(shortcut => {
         const layoutItem = layout.find(item => item.i === shortcut.i);
         if (layoutItem) {
           return { ...shortcut, x: layoutItem.x, y: layoutItem.y, w: layoutItem.w, h: layoutItem.h };
@@ -167,9 +180,39 @@ function App() {
       });
       return {
         ...prevAllShortcuts,
-        [selectedShortcutCategory]: newShortcutsForCategory,
+        [selectedCategory]: newShortcutsForCategory,
       };
     });
+  };
+
+  const handleRenameCategory = (oldCategory, newCategory) => {
+    if (oldCategory === newCategory) return;
+    if (allShortcuts[newCategory]) {
+      alert(`Category "${newCategory}" already exists. Please choose a different name.`);
+      return;
+    }
+
+    setAllShortcuts(prev => {
+      const updated = { ...prev };
+      if (updated[oldCategory]) {
+        updated[newCategory] = updated[oldCategory];
+        delete updated[oldCategory];
+      }
+      return updated;
+    });
+
+    setLayouts(prev => {
+      const updated = { ...prev };
+      if (updated[oldCategory]) {
+        updated[newCategory] = updated[oldCategory];
+        delete updated[oldCategory];
+      }
+      return updated;
+    });
+
+    if (selectedCategory === oldCategory) {
+      setSelectedCategory(newCategory);
+    }
   };
 
   // Handler to sync category changes from Sidebar (add/edit/delete)
@@ -178,29 +221,11 @@ function App() {
     if (action === 'add' && newCategory) {
       setAllShortcuts(prev => ({ ...prev, [newCategory]: [] }));
       setLayouts(prev => ({ ...prev, [newCategory]: [] }));
-      setSelectedShortcutCategory(newCategory);
+      setSelectedCategory(newCategory);
     }
     // If a category is renamed, update allShortcuts and layouts keys
     if (action === 'edit' && oldCategory && newCategory) {
-      setAllShortcuts(prev => {
-        const updated = { ...prev };
-        if (updated[oldCategory]) {
-          updated[newCategory] = updated[oldCategory];
-          delete updated[oldCategory];
-        }
-        return updated;
-      });
-      setLayouts(prev => {
-        const updated = { ...prev };
-        if (updated[oldCategory]) {
-          updated[newCategory] = updated[oldCategory];
-          delete updated[oldCategory];
-        }
-        return updated;
-      });
-      if (selectedShortcutCategory === oldCategory) {
-        setSelectedShortcutCategory(newCategory);
-      }
+      handleRenameCategory(oldCategory, newCategory);
     }
     // If a category is deleted, remove from allShortcuts and layouts
     if (action === 'delete' && oldCategory) {
@@ -214,15 +239,11 @@ function App() {
         delete updated[oldCategory];
         return updated;
       });
-      if (selectedShortcutCategory === oldCategory) {
-        setSelectedShortcutCategory(newCategoryList[0] || '');
+      if (selectedCategory === oldCategory) {
+        setSelectedCategory(newCategoryList[0] || '');
       }
     }
   };
-
-  
-
-  
 
   const [shortcutContextMenu, setShortcutContextMenu] = useState({ visible: false, x: 0, y: 0, shortcut: null });
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -292,15 +313,15 @@ function App() {
   const handleSaveNewShortcut = ({ name, url }) => {
     const newShortcut = {
       i: `new-${new Date().getTime()}`,
-      x: (allShortcuts[selectedShortcutCategory].length * 2) % 12,
+      x: (allShortcuts[selectedCategory].length * 2) % 12,
       y: Infinity, // This will be handled by react-grid-layout
       w: 1,
       h: 1,
       name,
       url,
     };
-    const updatedShortcuts = [...allShortcuts[selectedShortcutCategory], newShortcut];
-    setAllShortcuts({ ...allShortcuts, [selectedShortcutCategory]: updatedShortcuts });
+    const updatedShortcuts = [...allShortcuts[selectedCategory], newShortcut];
+    setAllShortcuts({ ...allShortcuts, [selectedCategory]: updatedShortcuts });
     setIsAddModalVisible(false);
   };
 
@@ -323,10 +344,10 @@ function App() {
   };
 
   const handleSaveShortcut = (updatedShortcut) => {
-    const updatedShortcuts = allShortcuts[selectedShortcutCategory].map(s =>
+    const updatedShortcuts = allShortcuts[selectedCategory].map(s =>
       s.i === updatedShortcut.i ? updatedShortcut : s
     );
-    setAllShortcuts({ ...allShortcuts, [selectedShortcutCategory]: updatedShortcuts });
+    setAllShortcuts({ ...allShortcuts, [selectedCategory]: updatedShortcuts });
     setIsEditModalVisible(false);
     setEditingShortcut(null);
   };
@@ -336,8 +357,8 @@ function App() {
     if (!shortcut) return;
 
     if (window.confirm(`Are you sure you want to delete ${shortcut.name}?`)) {
-      const updatedShortcuts = allShortcuts[selectedShortcutCategory].filter(s => s.i !== shortcut.i);
-      setAllShortcuts({ ...allShortcuts, [selectedShortcutCategory]: updatedShortcuts });
+      const updatedShortcuts = allShortcuts[selectedCategory].filter(s => s.i !== shortcut.i);
+      setAllShortcuts({ ...allShortcuts, [selectedCategory]: updatedShortcuts });
     }
     handleCloseShortcutContextMenu();
   };
@@ -375,7 +396,7 @@ function App() {
       {!appSettings.simpleMode && (
         <Sidebar
           ref={sidebarRef}
-          onSelectCategory={setSelectedShortcutCategory}
+          onSelectCategory={setSelectedCategory}
           onCategoryChange={handleCategoryChange}
           onShowContextMenu={handleSidebarContextMenu}
           onShowSettings={handleSetting}
@@ -388,8 +409,8 @@ function App() {
         <SearchBar ref={searchBarRef} openInNewTab={appSettings.openSearchResultsInNewTab} />
         {!appSettings.simpleMode && (
           <ShortcutsDisplay
-            category={selectedShortcutCategory}
-            shortcuts={allShortcuts[selectedShortcutCategory]}
+            category={selectedCategory}
+            shortcuts={allShortcuts[selectedCategory]}
             layouts={layouts}
             onLayoutChange={onLayoutChange}
             height={shortcutsHeight}

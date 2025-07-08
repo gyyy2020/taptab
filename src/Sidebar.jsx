@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import CategoryContextMenu from './CategoryContextMenu';
 import './Sidebar.css';
 
@@ -8,9 +8,15 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
     return savedAvatar ? savedAvatar : null;
   });
   const fileInputRef = useRef(null);
-  const [shortcuts, setShortcuts] = useState(["Common", "AI", "Code", "Info", "Learn", "Fun"]);
+  const [shortcuts, setShortcuts] = useState(() => {
+    const savedShortcuts = localStorage.getItem('shortcuts');
+    return savedShortcuts ? JSON.parse(savedShortcuts) : ["Common", "AI", "Code", "Info", "Learn", "Fun"];
+  });
   const [selectedCategory, setSelectedCategory] = useState("Common"); // Default selected category
-  // Remove local contextMenu state, use App's portal instead
+
+  useEffect(() => {
+    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+  }, [shortcuts]);
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();
@@ -49,7 +55,11 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
 
   const handleEditCategory = (category) => {
     const newName = prompt('Edit category name:', category);
-    if (newName && newName !== category && !shortcuts.includes(newName)) {
+    if (newName && newName !== category) {
+      if (shortcuts.includes(newName)) {
+        alert(`Category "${newName}" already exists. Please choose a different name.`);
+        return;
+      }
       const updatedShortcuts = shortcuts.map(cat => (cat === category ? newName : cat));
       setShortcuts(updatedShortcuts);
       if (selectedCategory === category) {
@@ -63,12 +73,17 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
   };
 
   const handleDeleteCategory = (category) => {
+    if (category === 'Common') {
+      alert('The "Common" category cannot be deleted.');
+      return;
+    }
     if (window.confirm(`Delete category "${category}" and all its shortcuts?`)) {
       const newShortcuts = shortcuts.filter(cat => cat !== category);
       setShortcuts(newShortcuts);
       if (selectedCategory === category) {
-        setSelectedCategory(newShortcuts[0] || '');
-        onSelectCategory(newShortcuts[0] || '');
+        const newSelected = newShortcuts[0] || '';
+        setSelectedCategory(newSelected);
+        onSelectCategory(newSelected);
       }
       if (onCategoryChange) {
         onCategoryChange(newShortcuts, 'delete', category);
@@ -106,7 +121,6 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
           ))}
         </ul>
       </div>
-      {/* Context menu is now rendered at the root via portal */}
       <div id="context-menu-root" />
       <div className="add-button" onClick={() => {
         const newCategory = prompt('Enter new category name:');
