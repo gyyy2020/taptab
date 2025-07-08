@@ -67,7 +67,6 @@
 
 .day-temp {
   font-size:1em;
-  flex: 1;
   text-align: right;
   color:#3a8dde;
 }
@@ -102,7 +101,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(114, 114, 114, 0.7);
+  background-color: rgba(114, 114, 114, 0.18);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,12 +109,12 @@
 }
 
 .weather-widget-modal-content {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.7);
   padding: 25px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  color: white;
+  color: rgb(0, 0, 0);
   width: 90%;
   max-width: 350px;
 }
@@ -131,15 +130,22 @@
   margin-bottom: 15px;
   border: 1px solid #555;
   border-radius: 5px;
-  background-color: #444;
-  color: white;
+  background-color: #f1f1f1;
+  color: rgb(0, 0, 0);
 }
 
 .weather-widget-modal-content input[type="text"]::placeholder {
   color: #bbb;
 }
 
-.modal-buttons button {
+.weather-widget-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 110px;
+  margin-top: 20px;
+}
+
+.weather-widget-modal-buttons button {
   margin: 0 10px;
   padding: 10px 20px;
   font-size: 1em;

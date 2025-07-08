@@ -164,7 +164,7 @@ const WeatherWidget = () => {
               placeholder="Enter city name"
               autoFocus
             />
-            <div className="modal-buttons">
+            <div className="weather-widget-modal-buttons">
               <button type="submit">Save</button>
               <button type="button" onClick={handleCityInputCancel}>Cancel</button>
             </div>
