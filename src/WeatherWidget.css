@@ -6,6 +6,7 @@
   color: rgb(0, 0, 0);
   padding: 12px 6px 12px 6px;
   border-radius: 8px;
+  font-size: 15px;
   font-family: 'Arial', sans-serif;
   z-index: 1000; /* Ensure it's above other content */
   display: flex;
@@ -29,14 +30,15 @@
 }
 
 .weather-title {
-  font-size: 1.2em;
+  /* font-size: 1.2em; */
   font-weight: bold;
 }
 
 .weather-city {
-  font-size: 1.2em;
+  font-size: 0.97em;
   font-weight: bold;
   color: #3a8dde;
+  min-width: 56px;
 }
 
 .weather-forecast {
@@ -55,13 +57,20 @@
 
 .day-name {
   font-size:0.98em;
-  font-weight: bold;
+  width: 5.5em;
+  /* font-weight: bold; */
   flex: 1;
   text-align: left;
 }
 
 .day-icon {
-  font-size: 1.5em;
+  font-size: 1.1em;
+  width: 1.9em;
+  text-align:center;
+}
+
+.day-temp-container {
+  display: flex;
   margin: 0 10px;
 }
 
@@ -69,6 +78,7 @@
   font-size:1em;
   text-align: right;
   color:#3a8dde;
+  min-width: 56px;
 }
 
 .weather-widget button {

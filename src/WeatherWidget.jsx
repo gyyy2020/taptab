@@ -91,7 +91,7 @@ const WeatherWidget = () => {
         const dailyForecast = data.daily.time.map((dateString, index) => ({
           day: getDayName(dateString, index),
           icon: getWeatherEmoji(data.daily.weather_code[index]),
-          temp: `${Math.round(data.daily.temperature_2m_max[index])}°C / ${Math.round(data.daily.temperature_2m_min[index])}°C`,
+          temp: `${Math.round(data.daily.temperature_2m_max[index])}°C/${Math.round(data.daily.temperature_2m_min[index])}°C`,
         }));
 
         const newWeatherData = { city: targetCity, forecast: dailyForecast, timestamp: new Date().getTime() };
