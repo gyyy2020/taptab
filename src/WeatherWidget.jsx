@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import './WeatherWidget.css';
 
 const WeatherWidget = () => {
@@ -187,9 +188,11 @@ const WeatherWidget = () => {
   }
 
   return (
-    <div className="weather-widget" onClick={handleWidgetClick}>
-      {widgetContent}
-      {showCityInputModal && (
+    <>
+      <div className="weather-widget" onClick={handleWidgetClick}>
+        {widgetContent}
+      </div>
+      {showCityInputModal && ReactDOM.createPortal(
         <div className="weather-widget-modal-overlay">
           <div className="weather-widget-modal-content">
             <h3>Set City for Weather</h3>
@@ -208,9 +211,10 @@ const WeatherWidget = () => {
             </form>
             {error && <p className="error-message">{error}</p>}
           </div>
-        </div>
+        </div>,
+        document.getElementById('modal-root')
       )}
-    </div>
+    </>
   );
 };
 

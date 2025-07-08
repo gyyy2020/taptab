@@ -128,7 +128,8 @@
   color: rgb(0, 0, 0);
   width: 90%;
   max-width: 350px;
-  transform: translateY(-50px); /* Move the modal up by 50px */
+  transform: translateY(-50px); 
+  /* Move the modal up by 50px */
 }
 
 .weather-widget-modal-content h3 {

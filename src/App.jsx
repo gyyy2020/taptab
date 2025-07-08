@@ -27,23 +27,63 @@ const initialAllShortcuts = {
   ],
   AI: [
     { i: 'chatgpt', x: 0, y: 0, w: 1, h: 1, name: 'ChatGPT', url: 'https://chat.openai.com' },
-    { i: 'bard', x: 1, y: 0, w: 1, h: 1, name: 'Bard', url: 'https://bard.google.com' },
+    { i: 'gemini', x: 1, y: 0, w: 1, h: 1, name: 'Gemini', url: 'https://gemini.google.com' },
+    { i: 'canva', x: 2, y: 0, w: 1, h: 1, name: 'Canva', url: 'https://www.canva.com' },
+    { i: 'deepl', x: 3, y: 0, w: 1, h: 1, name: 'DeepL', url: 'https://www.deepl.com' },
+    { i: 'quillbot', x: 4, y: 0, w: 1, h: 1, name: 'QuillBot', url: 'https://www.quillbot.com' },
+    { i: 'perplexity', x: 0, y: 1, w: 1, h: 1, name: 'Perplexity', url: 'https://www.perplexity.ai' },
+    { i: 'characterai', x: 1, y: 1, w: 1, h: 1, name: 'Character.AI', url: 'https://character.ai' },
+    { i: 'notion', x: 2, y: 1, w: 1, h: 1, name: 'Notion', url: 'https://www.notion.so' },
+    { i: 'midjourney', x: 3, y: 1, w: 1, h: 1, name: 'Midjourney', url: 'https://www.midjourney.com' },
+    { i: 'huggingface', x: 4, y: 1, w: 1, h: 1, name: 'Hugging Face', url: 'https://huggingface.co' },
   ],
   Code: [
-    { i: 'github', x: 0, y: 0, w: 1, h: 1, name: 'GitHub', url: 'https://github.com' },
-    { i: 'stackoverflow', x: 1, y: 0, w: 1, h: 1, name: 'Stack Overflow', url: 'https://stackoverflow.com' },
+    { i: 'stackoverflow', x: 0, y: 0, w: 1, h: 1, name: 'Stack Overflow', url: 'https://stackoverflow.com' },
+    { i: 'github', x: 1, y: 0, w: 1, h: 1, name: 'GitHub', url: 'https://github.com' },
+    { i: 'mdn', x: 2, y: 0, w: 1, h: 1, name: 'MDN Web Docs', url: 'https://developer.mozilla.org' },
+    { i: 'devto', x: 3, y: 0, w: 1, h: 1, name: 'Dev.to', url: 'https://dev.to' },
+    { i: 'hackerrank', x: 4, y: 0, w: 1, h: 1, name: 'HackerRank', url: 'https://www.hackerrank.com' },
+    { i: 'codepen', x: 0, y: 1, w: 1, h: 1, name: 'CodePen', url: 'https://codepen.io' },
+    { i: 'csstricks', x: 1, y: 1, w: 1, h: 1, name: 'CSS-Tricks', url: 'https://css-tricks.com' },
+    { i: 'smashingmagazine', x: 2, y: 1, w: 1, h: 1, name: 'Smashing Magazine', url: 'https://www.smashingmagazine.com' },
+    { i: 'medium', x: 3, y: 1, w: 1, h: 1, name: 'Medium', url: 'https://medium.com' },
+    { i: 'freecodecamp', x: 4, y: 1, w: 1, h: 1, name: 'freeCodeCamp', url: 'https://www.freecodecamp.org' },
   ],
   Info: [
     { i: 'wikipedia', x: 0, y: 0, w: 1, h: 1, name: 'Wikipedia', url: 'https://www.wikipedia.org' },
-    { i: 'bbcnews', x: 1, y: 0, w: 1, h: 1, name: 'BBC News', url: 'https://www.bbc.com/news' },
+    { i: 'google', x: 1, y: 0, w: 1, h: 1, name: 'Google', url: 'https://www.google.com' },
+    { i: 'youtube', x: 2, y: 0, w: 1, h: 1, name: 'YouTube', url: 'https://www.youtube.com' },
+    { i: 'bbcnews', x: 3, y: 0, w: 1, h: 1, name: 'BBC News', url: 'https://www.bbc.com/news' },
+    { i: 'nationalgeographic', x: 4, y: 0, w: 1, h: 1, name: 'Nat Geo', url: 'https://www.nationalgeographic.com' },
+    { i: 'ted', x: 0, y: 1, w: 1, h: 1, name: 'TED Talks', url: 'https://www.ted.com' },
+    { i: 'khanacademyinfo', x: 1, y: 1, w: 1, h: 1, name: 'Khan Academy', url: 'https://www.khanacademy.org' },
+    { i: 'mayoclinic', x: 2, y: 1, w: 1, h: 1, name: 'Mayo Clinic', url: 'https://www.mayoclinic.org' },
+    { i: 'courserainfo', x: 3, y: 1, w: 1, h: 1, name: 'Coursera', url: 'https://www.coursera.org' },
+    { i: 'howstuffworks', x: 4, y: 1, w: 1, h: 1, name: 'HowStuffWorks', url: 'https://www.howstuffworks.com' },
   ],
   Learn: [
     { i: 'coursera', x: 0, y: 0, w: 1, h: 1, name: 'Coursera', url: 'https://www.coursera.org' },
     { i: 'edx', x: 1, y: 0, w: 1, h: 1, name: 'edX', url: 'https://www.edx.org' },
+    { i: 'khanacademy', x: 2, y: 0, w: 1, h: 1, name: 'Khan Academy', url: 'https://www.khanacademy.org' },
+    { i: 'udemy', x: 3, y: 0, w: 1, h: 1, name: 'Udemy', url: 'https://www.udemy.com' },
+    { i: 'linkedinlearning', x: 4, y: 0, w: 1, h: 1, name: 'LinkedIn Learning', url: 'https://www.linkedin.com/learning' },
+    { i: 'skillshare', x: 0, y: 1, w: 1, h: 1, name: 'Skillshare', url: 'https://www.skillshare.com' },
+    { i: 'masterclass', x: 1, y: 1, w: 1, h: 1, name: 'MasterClass', url: 'https://www.masterclass.com' },
+    { i: 'byjus', x: 2, y: 1, w: 1, h: 1, name: 'Byjus', url: 'https://byjus.com' },
+    { i: 'toppr', x: 3, y: 1, w: 1, h: 1, name: 'Toppr', url: 'https://www.toppr.com' },
+    { i: 'natgeokids', x: 4, y: 1, w: 1, h: 1, name: 'Nat Geo Kids', url: 'https://kids.nationalgeographic.com' },
   ],
   Fun: [
-    { i: 'netflix', x: 0, y: 0, w: 1, h: 1, name: 'Netflix', url: 'https://www.netflix.com' },
-    { i: 'spotify', x: 1, y: 0, w: 1, h: 1, name: 'Spotify', url: 'https://www.spotify.com' },
+    { i: 'youtube', x: 0, y: 0, w: 1, h: 1, name: 'YouTube', url: 'https://www.youtube.com' },
+    { i: 'netflix', x: 1, y: 0, w: 1, h: 1, name: 'Netflix', url: 'https://www.netflix.com' },
+    { i: 'spotify', x: 2, y: 0, w: 1, h: 1, name: 'Spotify', url: 'https://www.spotify.com' },
+    { i: 'reddit', x: 3, y: 0, w: 1, h: 1, name: 'Reddit', url: 'https://www.reddit.com' },
+    { i: 'imgur', x: 4, y: 0, w: 1, h: 1, name: 'Imgur', url: 'https://imgur.com' },
+    { i: 'theuselessweb', x: 0, y: 1, w: 1, h: 1, name: 'The Useless Web', url: 'https://theuselessweb.com' },
+    { i: 'littlealchemy2', x: 1, y: 1, w: 1, h: 1, name: 'Little Alchemy 2', url: 'https://littlealchemy2.com' },
+    { i: 'quickdraw', x: 2, y: 1, w: 1, h: 1, name: 'Quick, Draw!', url: 'https://quickdraw.withgoogle.com' },
+    { i: 'geoguessr', x: 3, y: 1, w: 1, h: 1, name: 'GeoGuessr', url: 'https://www.geoguessr.com' },
+    { i: 'hackertyper', x: 4, y: 1, w: 1, h: 1, name: 'Hacker Typer', url: 'https://hackertyper.net' },
   ],
 };
 
@@ -178,10 +218,7 @@ function App() {
         }
         return shortcut;
       });
-      return {
-        ...prevAllShortcuts,
-        [selectedCategory]: newShortcutsForCategory,
-      };
+      return { ...prevAllShortcuts, [selectedCategory]: newShortcutsForCategory };
     });
   };
 
@@ -253,7 +290,7 @@ function App() {
   const [isSettingsPageVisible, setIsSettingsPageVisible] = useState(false);
   const [appSettings, setAppSettings] = useState(() => {
     const savedSettings = localStorage.getItem('appSettings');
-    return savedSettings ? { ...JSON.parse(savedSettings), simpleMode: JSON.parse(savedSettings).simpleMode || false } : { simpleMode: false };
+    return savedSettings ? { ...JSON.parse(savedSettings), simpleMode: JSON.parse(savedSettings).simpleMode || false } : { simpleMode: false, mottoText: "道阻且长，行则将至" };
   });
 
   useEffect(() => {
