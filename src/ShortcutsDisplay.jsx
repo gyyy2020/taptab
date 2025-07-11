@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import './ShortcutsDisplay.css';
 import 'react-grid-layout/css/styles.css';
@@ -9,6 +9,68 @@ import YearProgressWidget from './YearProgressWidget';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height, onShortcutContextMenu, openInNewTab }) => {
+  // Cache state for shortcut icons
+  const [cachedShortcuts, setCachedShortcuts] = useState(shortcuts);
+
+  // Helper to get a cache key for each shortcut
+  const getShortcutIconCacheKey = (url) => {
+    try {
+      const urlObj = new URL(url);
+      return `shortcut_icon_${urlObj.hostname}`;
+    } catch {
+      return null;
+    }
+  };
+
+  // Helper to fetch and cache icon as Base64
+  const fetchAndCacheShortcutIcon = async (iconUrl, cacheKey) => {
+    if (!cacheKey) return iconUrl;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) return cached;
+    try {
+      const response = await fetch(iconUrl);
+      const blob = await response.blob();
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          try {
+            localStorage.setItem(cacheKey, reader.result);
+          } catch (e) {}
+          resolve(reader.result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch {
+      return iconUrl;
+    }
+  };
+
+  // On category or shortcuts change, ensure icons are cached
+  useEffect(() => {
+    let isMounted = true;
+    const cacheIcons = async () => {
+      const updatedShortcuts = await Promise.all(shortcuts.map(async (shortcut) => {
+        if (shortcut.component) return shortcut; // widgets
+        const cacheKey = getShortcutIconCacheKey(shortcut.url);
+        let icon = shortcut.icon;
+        if (!icon) {
+          icon = `https://favicon.im/${shortcut.url}&sz=32`;
+        }
+        const cached = cacheKey ? localStorage.getItem(cacheKey) : null;
+        if (cached) {
+          return { ...shortcut, icon: cached };
+        } else {
+          const dataUrl = await fetchAndCacheShortcutIcon(icon, cacheKey);
+          return { ...shortcut, icon: dataUrl };
+        }
+      }));
+      if (isMounted) setCachedShortcuts(updatedShortcuts);
+    };
+    cacheIcons();
+    return () => { isMounted = false; };
+  }, [category, shortcuts]);
+
   const currentLayout = layouts[category] || shortcuts.map(s => ({ i: s.i, x: s.x, y: s.y, w: s.w, h: s.h }));
   const isDraggingRef = useRef(false);
   const hasDraggedRef = useRef(false);
@@ -53,7 +115,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
         isDraggable={true}
         isResizable={true}
       >
-        {shortcuts.map((shortcut) => (
+        {cachedShortcuts.map((shortcut) => (
           <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }} className="shortcut-app" onContextMenu={(e) => onShortcutContextMenu(e, shortcut)}>
             {shortcut.component === 'BirthdayWidget' ? (
               <BirthdayWidget
@@ -71,7 +133,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
                 onClick={handleClick}
                 onDragStart={(e) => e.preventDefault()} // Prevents browser's default drag behavior for links
               >
-                <img src={`https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=32`} alt="" className="shortcut-icon" />
+                <img src={shortcut.icon || `https://favicon.im/${shortcut.url}&sz=32`} alt="" className="shortcut-icon" />
                 <span className="shortcut-name">{shortcut.name}</span>
               </a>
             )}

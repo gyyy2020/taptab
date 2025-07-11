@@ -11,7 +11,7 @@ function AddSearchEngineModal({ isOpen, onClose, onAddEngine }) {
     e.preventDefault();
     if (name.trim() && url.trim()) {
       // it would be better to use the search engine's own favicon service
-      onAddEngine({ name, url, icon: `https://www.${new URL(url).hostname}.com/favicon.ico` });
+      onAddEngine({ name, url, icon: `https://${new URL(url).hostname}/favicon.ico` });
       setName('');
       setUrl('');
       onClose();
