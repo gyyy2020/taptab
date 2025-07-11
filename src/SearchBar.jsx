@@ -12,11 +12,51 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const getFaviconCacheKey = (iconUrl) => {
+    try {
+      const urlObj = new URL(iconUrl);
+      return `favicon_${urlObj.hostname}`;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  // Helper to fetch favicon as Base64 data URL and cache it
+  const fetchAndCacheFavicon = async (iconUrl) => {
+    const cacheKey = getFaviconCacheKey(iconUrl);
+    if (!cacheKey) return iconUrl;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) return cached;
+    try {
+      const response = await fetch(iconUrl);
+      const blob = await response.blob();
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          try {
+            localStorage.setItem(cacheKey, reader.result);
+          } catch (e) {
+            // Storage quota might be exceeded
+          }
+          resolve(reader.result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      return iconUrl;
+    }
+  };
+
   const [searchEngines, setSearchEngines] = useState(() => {
     const savedEngines = localStorage.getItem('searchEngines');
     const loadedEngines = savedEngines ? JSON.parse(savedEngines) : initialSearchEngines;
-    console.log('Loaded searchEngines from localStorage:', loadedEngines);
-    return loadedEngines;
+    // Attach cached favicons if available
+    return loadedEngines.map(engine => {
+      const cacheKey = getFaviconCacheKey(engine.icon);
+      const cached = cacheKey ? localStorage.getItem(cacheKey) : null;
+      return { ...engine, icon: cached || engine.icon };
+    });
   });
   const [selectedEngine, setSelectedEngine] = useState(() => {
     const savedSelectedEngine = localStorage.getItem('selectedEngine');
@@ -61,12 +101,15 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     setIsMenuVisible(false);
   };
 
-  const handleAddEngine = (newEngine) => {
+  const handleAddEngine = async (newEngine) => {
+    // Fetch and cache favicon, then add engine with cached icon
+    const iconDataUrl = await fetchAndCacheFavicon(newEngine.icon);
     setSearchEngines((prevEngines) => {
-      const updatedEngines = [...prevEngines, newEngine];
+      const updatedEngines = [...prevEngines, { ...newEngine, icon: iconDataUrl }];
       return updatedEngines;
     });
   };
+
 
   const openAddEngineModal = () => {
     setIsMenuVisible(false); // Close search engine menu

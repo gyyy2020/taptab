@@ -10,7 +10,8 @@ function AddSearchEngineModal({ isOpen, onClose, onAddEngine }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim() && url.trim()) {
-      onAddEngine({ name, url, icon: `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}` });
+      // it would be better to use the search engine's own favicon service
+      onAddEngine({ name, url, icon: `https://www.${new URL(url).hostname}.com/favicon.ico` });
       setName('');
       setUrl('');
       onClose();
