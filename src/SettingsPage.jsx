@@ -1,14 +1,20 @@
+// Import necessary React hooks and CSS for styling
 import React, { useState, useEffect, useRef } from 'react';
 import './SettingsPage.css';
 
+// Component for the settings page
 const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) => {
+  // State to hold temporary settings before saving
   const [tempSettings, setTempSettings] = useState(currentSettings);
+  // Ref to the settings page element
   const settingsRef = useRef(null);
 
+  // Effect to update temporary settings when current settings change
   useEffect(() => {
     setTempSettings(currentSettings);
   }, [currentSettings]);
 
+  // Effect to handle clicks outside the settings page to close it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
@@ -27,10 +33,12 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
     };
   }, [visible, onClose]);
 
+  // If the settings page is not visible, do not render it
   if (!visible) {
     return null;
   }
 
+  // Handle changes to settings inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const updatedSettings = {
@@ -41,10 +49,12 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
     onSettingChange(updatedSettings);
   };
 
+  // Handle saving the settings
   const handleSave = () => {
     onSettingChange(tempSettings);
   };
 
+  // Handle resetting all settings to default
   const handleReset = () => {
     if (window.confirm("Are you sure you want to reset all settings to default?")) {
       const defaultSettings = {}; // Define your default settings here if needed
@@ -52,6 +62,7 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
     }
   };
 
+  // Handle backing up settings to a JSON file
   const handleBackup = () => {
     const keysToBackup = ['userAvatar', 'appSettings', 'allShortcuts', 'searchEngines', 'selectedEngine', 'layouts'];
     const backupData = {};
@@ -60,15 +71,14 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
       const item = localStorage.getItem(key);
       if (item) {
         try {
-          // Attempt to parse if it's a JSON string, otherwise keep as is
           backupData[key] = JSON.parse(item);
         } catch (e) {
-          backupData[key] = item; // Not a JSON string, store as is
+          backupData[key] = item;
         }
       }
     });
 
-    const data = JSON.stringify(backupData, null, 2); // Pretty print JSON
+    const data = JSON.stringify(backupData, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -80,6 +90,7 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
     URL.revokeObjectURL(url);
   };
 
+  // Handle importing settings from a JSON file
   const handleImport = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -90,11 +101,10 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
           if (window.confirm("Importing settings will overwrite current settings. Continue?")) {
             for (const key in importedData) {
               const value = importedData[key];
-              // If the value is an object, stringify it before storing in localStorage
               localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : value);
             }
             alert("Settings imported successfully! Please refresh the page.");
-            window.location.reload(); // Trigger a full page reload to apply all settings
+            window.location.reload();
           }
         } catch (error) {
           alert(`Failed to import settings: ${error.message}. Please ensure the file is a valid backup JSON.`);
@@ -105,6 +115,7 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
     }
   };
 
+  // Render the settings page
   return (
     <div className={`settings-page-content ${visible ? 'visible' : ''}`} ref={settingsRef}>
       <h2>Settings</h2>
@@ -138,9 +149,9 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
           <input
             type="range"
             name="dateTimeFontSize"
-            min="10" // Example min font size
-            max="50" // Example max font size
-            value={tempSettings.dateTimeFontSize || 24} // Default value
+            min="10"
+            max="50"
+            value={tempSettings.dateTimeFontSize || 24}
             onChange={handleChange}
           />
           <span>{tempSettings.dateTimeFontSize || 24}px</span>

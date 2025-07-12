@@ -1,12 +1,16 @@
+// Import necessary React hooks and CSS for styling
 import React, { useState, useEffect, useRef } from 'react';
 import './BirthdayWidget.css';
 
+// Component to display a birthday widget
 const BirthdayWidget = ({ onClick, onDragStart }) => {
+  // State variables for birthday, days since birthday, and input visibility
   const [birthday, setBirthday] = useState(null);
   const [days, setDays] = useState(0);
   const [isInputVisible, setIsInputVisible] = useState(false); // New state for input visibility
   const dateInputRef = useRef(null);
 
+  // Load birthday from local storage on component mount
   useEffect(() => {
     const savedBirthday = localStorage.getItem('birthday');
     if (savedBirthday) {
@@ -14,6 +18,7 @@ const BirthdayWidget = ({ onClick, onDragStart }) => {
     }
   }, []);
 
+  // Calculate the number of days since the birthday whenever the birthday changes
   useEffect(() => {
     if (birthday) {
       const birthDate = new Date(birthday);
@@ -29,6 +34,7 @@ const BirthdayWidget = ({ onClick, onDragStart }) => {
     }
   }, [birthday]);
 
+  // Handle clicks on the widget to show the input field
   const handleWidgetClick = (e) => {
     if (onClick) {
       onClick(e);
@@ -44,6 +50,7 @@ const BirthdayWidget = ({ onClick, onDragStart }) => {
     }
   };
 
+  // Handle changes to the date input field
   const handleDateChange = (e) => {
     const newBirthdayString = e.target.value;
     // Simple validation for YYYY-MM-DD format
@@ -62,13 +69,16 @@ const BirthdayWidget = ({ onClick, onDragStart }) => {
     }
   };
 
+  // Hide the input field when it loses focus
   const handleInputBlur = () => {
     setIsInputVisible(false);
   };
 
+  // Render the birthday widget
   return (
     <div className="birthday-widget" onClick={handleWidgetClick} onDragStart={onDragStart}>
       {isInputVisible ? (
+        // Render the input field if it is visible
         <input
           type="text"
           ref={dateInputRef}
@@ -79,12 +89,14 @@ const BirthdayWidget = ({ onClick, onDragStart }) => {
           defaultValue={birthday || ''}
         />
       ) : birthday ? (
+        // Render the birthday information if a birthday is set
         <div className="birthday-content">
           <span className="days-text">You have been on this world for</span>
           <span className="days-number">{days.toLocaleString()}</span>
           <span className="days-text">days.</span>
         </div>
       ) : (
+        // Render a prompt to set the birthday if it is not set
         <div className="birthday-prompt">
           <span>Click to set your birthday (YYYY-MM-DD)</span>
         </div>

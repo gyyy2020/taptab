@@ -1,17 +1,24 @@
+// Import necessary React hooks and components
 import React, { useState, useEffect, useRef } from 'react';
 import SearchEngineMenu from './SearchEngineMenu';
 import AddSearchEngineModal from './AddSearchEngineModal';
 import './SearchBar.css';
 
+// Component for the search bar
 const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
+  // Initial list of search engines
   const initialSearchEngines = [
     { name: 'Google', url: 'https://www.google.com/search?q=', icon: 'https://www.google.com/favicon.ico' },
     { name: 'Bing', url: 'https://www.bing.com/search?q=', icon: 'https://www.bing.com/favicon.ico' },
     { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', icon: 'https://duckduckgo.com/favicon.ico' },
   ];
 
+  // State variables for search term, menu visibility, and modal visibility
   const [searchTerm, setSearchTerm] = useState('');
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // Function to get a cache key for a favicon URL
   const getFaviconCacheKey = (iconUrl) => {
     try {
       const urlObj = new URL(iconUrl);
@@ -21,7 +28,7 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     }
   };
 
-  // Helper to fetch favicon as Base64 data URL and cache it
+  // Function to fetch and cache a favicon as a Base64 data URL
   const fetchAndCacheFavicon = async (iconUrl) => {
     const cacheKey = getFaviconCacheKey(iconUrl);
     if (!cacheKey) return iconUrl;
@@ -48,6 +55,7 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     }
   };
 
+  // State for the list of search engines, initialized from local storage or the initial list
   const [searchEngines, setSearchEngines] = useState(() => {
     const savedEngines = localStorage.getItem('searchEngines');
     const loadedEngines = savedEngines ? JSON.parse(savedEngines) : initialSearchEngines;
@@ -58,6 +66,8 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
       return { ...engine, icon: cached || engine.icon };
     });
   });
+
+  // State for the selected search engine, initialized from local storage or the first engine in the list
   const [selectedEngine, setSelectedEngine] = useState(() => {
     const savedSelectedEngine = localStorage.getItem('selectedEngine');
     let initialSelected = initialSearchEngines[0];
@@ -76,19 +86,20 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     console.log('Initial selectedEngine:', initialSelected);
     return initialSelected;
   });
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const searchBarRef = useRef(null);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const searchBarRef = useRef(null);
 
+  // Effect to save the list of search engines to local storage whenever it changes
   useEffect(() => {
     localStorage.setItem('searchEngines', JSON.stringify(searchEngines));
-    console.log('Saved searchEngines to localStorage:', searchEngines);
   }, [searchEngines]);
 
+  // Effect to save the selected search engine to local storage whenever it changes
   useEffect(() => {
     localStorage.setItem('selectedEngine', JSON.stringify(selectedEngine));
-    console.log('Saved selectedEngine to localStorage:', selectedEngine);
   }, [selectedEngine]);
 
+  // Handle form submission to perform a search
   const handleSearch = (event) => {
     event.preventDefault();
     if (searchTerm.trim()) {
@@ -96,11 +107,13 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     }
   };
 
+  // Handle selection of a search engine from the menu
   const handleEngineSelect = (engine) => {
     setSelectedEngine(engine);
     setIsMenuVisible(false);
   };
 
+  // Handle adding a new search engine
   const handleAddEngine = async (newEngine) => {
     // Fetch and cache favicon, then add engine with cached icon
     const iconDataUrl = await fetchAndCacheFavicon(newEngine.icon);
@@ -110,17 +123,20 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     });
   };
 
-
+  // Open the modal to add a new search engine
   const openAddEngineModal = () => {
     setIsMenuVisible(false); // Close search engine menu
     setIsModalVisible(true);
   };
 
+  // Render the search bar
   return (
     <form className="search-bar-container" onSubmit={handleSearch} ref={ref}>
+      {/* Button to open the search engine menu */}
       <button type="button" className="search-icon-button" onClick={() => setIsMenuVisible(!isMenuVisible)}>
         <img src={selectedEngine.icon} alt={selectedEngine.name} className="search-engine-icon" />
       </button>
+      {/* Input field for the search term */}
       <input
         type="text"
         className="search-input"
@@ -128,9 +144,11 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      {/* Button to submit the search */}
       <button type="submit" className="magnifier-button">
         <i className="fas fa-search"></i>
       </button>
+      {/* Search engine menu */}
       <SearchEngineMenu
         isVisible={isMenuVisible}
         onClose={() => setIsMenuVisible(false)}
@@ -138,6 +156,7 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
         searchEngines={searchEngines}
         onAddEngineClick={openAddEngineModal}
       />
+      {/* Modal to add a new search engine */}
       <AddSearchEngineModal
         isOpen={isModalVisible}
         onClose={() => setIsModalVisible(false)}

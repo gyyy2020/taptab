@@ -1,19 +1,24 @@
+// Import necessary React hooks and CSS for styling
 import React, { useState, useEffect } from 'react';
 import './YearProgressWidget.css';
 
+// Component to display the year progress widget
 const YearProgressWidget = ({ w, h }) => {
+  // State variables for the week number and day number
   const [weekNumber, setWeekNumber] = useState(0);
   const [dayNumber, setDayNumber] = useState(0);
 
+  // Determine the widget's class based on its width and height
   const widgetClass = w >= h ? 'year-progress-widget-horizontal' : 'year-progress-widget-vertical';
 
+  // Function to calculate the year progress
   const calculateProgress = () => {
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const diff = now - startOfYear;
     const oneDay = 1000 * 60 * 60 * 24;
 
-    // Calculate day number
+    // Calculate the current day number of the year
     const currentDayNumber = Math.floor(diff / oneDay) + 1;
     setDayNumber(currentDayNumber);
 
@@ -29,12 +34,14 @@ const YearProgressWidget = ({ w, h }) => {
     setWeekNumber(currentWeekNumber);
   };
 
+  // Effect to calculate the progress on component mount and update it every hour
   useEffect(() => {
     calculateProgress();
     const timerId = setInterval(calculateProgress, 60 * 60 * 1000); // Update every hour
     return () => clearInterval(timerId);
   }, []);
 
+  // Render the year progress widget
   return (
     <div className={`year-progress-widget ${widgetClass}`}>
       <div className="progress-item">

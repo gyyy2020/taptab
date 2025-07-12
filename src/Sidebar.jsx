@@ -1,27 +1,35 @@
+// Import necessary React hooks and components
 import React, { useState, useRef, useEffect } from 'react';
 import CategoryContextMenu from './CategoryContextMenu';
 import './Sidebar.css';
 
+// Component for the sidebar
 const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShowSettings }) => {
+  // State for the user's avatar, initialized from local storage
   const [avatar, setAvatar] = useState(() => {
     const savedAvatar = localStorage.getItem('userAvatar');
     return savedAvatar ? savedAvatar : null;
   });
+  // Ref to the file input element
   const fileInputRef = useRef(null);
+  // State for the list of shortcuts, initialized from local storage or a default list
   const [shortcuts, setShortcuts] = useState(() => {
     const savedShortcuts = localStorage.getItem('shortcuts');
     return savedShortcuts ? JSON.parse(savedShortcuts) : ["Common", "AI", "Code", "Info", "Learn", "Fun"];
   });
   const [selectedCategory, setSelectedCategory] = useState("Common"); // Default selected category
 
+  // Effect to save the list of shortcuts to local storage whenever it changes
   useEffect(() => {
     localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
   }, [shortcuts]);
 
+  // Handle clicks on the avatar to open the file input
   const handleAvatarClick = () => {
     fileInputRef.current.click();
   };
 
+  // Handle file selection for the avatar
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -34,14 +42,16 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
     }
   };
 
+  // Handle clicks on a category to select it
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     onSelectCategory(category);
   };
 
+  // Handle right-clicks on a category to show the context menu
   const handleCategoryRightClick = (e, category) => {
     e.preventDefault();
-    e.stopPropagation(); // Stop event propagation
+    e.stopPropagation();
     if (onShowContextMenu) {
       onShowContextMenu(
         e.clientX,
@@ -53,6 +63,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
     }
   };
 
+  // Handle editing a category name
   const handleEditCategory = (category) => {
     const newName = prompt('Edit category name:', category);
     if (newName && newName !== category) {
@@ -72,6 +83,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
     }
   };
 
+  // Handle deleting a category
   const handleDeleteCategory = (category) => {
     if (category === 'Common') {
       alert('The "Common" category cannot be deleted.');
@@ -91,8 +103,10 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
     }
   };
 
+  // Render the sidebar
   return (
     <div className="sidebar">
+      {/* Avatar container */}
       <div className="avatar-container" onClick={handleAvatarClick}>
         {avatar ? (
           <img src={avatar} alt="Avatar" className="avatar" />
@@ -107,6 +121,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
           accept="image/*"
         />
       </div>
+      {/* Shortcuts category list */}
       <div className="shortcuts-category">
         <ul>
           {shortcuts.map((shortcut) => (
@@ -121,7 +136,9 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
           ))}
         </ul>
       </div>
+      {/* Context menu root element */}
       <div id="context-menu-root" />
+      {/* Add category button */}
       <div className="add-button" onClick={() => {
         const newCategory = prompt('Enter new category name:');
         if (newCategory && !shortcuts.includes(newCategory)) {
@@ -151,6 +168,7 @@ const Sidebar = ({ onSelectCategory, onCategoryChange, onShowContextMenu, onShow
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
       </div>
+      {/* Settings button */}
       <div className="settings-button" onClick={onShowSettings}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

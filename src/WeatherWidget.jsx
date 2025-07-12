@@ -1,9 +1,12 @@
+// Import necessary React hooks and libraries
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './WeatherWidget.css';
 
+// Component to display the weather widget
 const WeatherWidget = () => {
-  const [city, setCity] = useState(() => localStorage.getItem('weatherCity') || 'London'); // Default city is London
+  // State variables for city, weather data, loading state, errors, and modal visibility
+  const [city, setCity] = useState(() => localStorage.getItem('weatherCity') || 'London');
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,6 +33,7 @@ const WeatherWidget = () => {
     return '❓';
   };
 
+  // Function to get the name of the day for a given date string
   const getDayName = (dateString, index) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -73,6 +77,7 @@ const WeatherWidget = () => {
     }
   };
 
+  // Function to fetch weather data from Open-Meteo API
   const fetchWeatherData = async (targetCity) => {
     setLoading(true);
     setError(null);
@@ -111,6 +116,7 @@ const WeatherWidget = () => {
     }
   };
 
+  // Effect to fetch weather data when the city changes or on component mount
   useEffect(() => {
     if (city) {
       const cachedData = localStorage.getItem('weatherData');
@@ -127,35 +133,31 @@ const WeatherWidget = () => {
       }
   }, [city]);
 
+  // Handle clicks on the widget to show the city input modal
   const handleWidgetClick = () => {
-    console.log('handleWidgetClick: Opening modal');
     setShowCityInputModal(true);
     setCurrentCityInput(city); // Pre-fill modal input with current city
   };
 
+  // Handle submission of the city input form
   const handleCityInputSubmit = (e) => {
     e.preventDefault();
-    console.log('handleCityInputSubmit: Attempting to save city', currentCityInput);
     if (currentCityInput.trim()) {
-      setCity(currentCityInput.trim()); // This will trigger useEffect to fetch weather
+      setCity(currentCityInput.trim());
       setShowCityInputModal(false);
-      console.log('handleCityInputSubmit: City saved, modal closed');
     } else {
       setError('City name cannot be empty.');
-      console.log('handleCityInputSubmit: City name empty');
     }
   };
 
+  // Handle cancellation of the city input
   const handleCityInputCancel = (e) => {
-    e.stopPropagation(); // Stop event bubbling
-    console.log('handleCityInputCancel: Closing modal');
+    e.stopPropagation();
     setShowCityInputModal(false);
   };
 
-  
-
+  // Determine the content of the widget based on the current state
   let widgetContent;
-
   if (loading) {
     widgetContent = <div>Loading weather...</div>;
   } else if (error) {
@@ -188,6 +190,7 @@ const WeatherWidget = () => {
     );
   }
 
+  // Render the weather widget and the city input modal
   return (
     <>
       <div className="weather-widget" onClick={handleWidgetClick}>

@@ -1,6 +1,9 @@
+// Import necessary React hooks
 import React, { useState, useEffect } from 'react';
 
+// Component for selecting a time zone
 const TimeZoneSelector = ({ onSelectTimeZone }) => {
+  // List of available time zones
   const timezones = [
     { name: 'Local Time', iana: Intl.DateTimeFormat().resolvedOptions().timeZone },
     { name: 'New York', iana: 'America/New_York' },
@@ -34,21 +37,25 @@ const TimeZoneSelector = ({ onSelectTimeZone }) => {
     { name: 'Auckland', iana: 'Pacific/Auckland' },
   ];
 
+  // State for the selected time zone, initialized from local storage or the default time zone
   const [selectedTimeZone, setSelectedTimeZone] = useState(() => {
     const savedTimeZone = localStorage.getItem('selectedTimeZone');
     return savedTimeZone || timezones[0].iana;
   });
 
+  // Effect to save the selected time zone to local storage whenever it changes
   useEffect(() => {
     localStorage.setItem('selectedTimeZone', selectedTimeZone);
   }, [selectedTimeZone]);
 
+  // Handle changes to the time zone selection
   const handleChange = (event) => {
     const selectedIana = event.target.value;
     setSelectedTimeZone(selectedIana);
     onSelectTimeZone(selectedIana);
   };
 
+  // Render the time zone selector dropdown
   return (
     <div className="timezone-selector">
       <select value={selectedTimeZone} onChange={handleChange}>
