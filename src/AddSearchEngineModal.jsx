@@ -19,7 +19,7 @@ function AddSearchEngineModal({ isOpen, onClose, onAddEngine }) {
     // Only add if both name and url are provided
     if (name.trim() && url.trim()) {
       // Use the site's favicon as the icon
-      onAddEngine({ name, url, icon: `https://${new URL(url).hostname}/favicon.ico` });
+      onAddEngine({ name, url, icon: `https://favicon.im/${new URL(url).hostname}?larger=true` });
       // Reset name field
       setName('');
       // Reset url field

@@ -103,7 +103,6 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
               const value = importedData[key];
               localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : value);
             }
-            alert("Settings imported successfully! Please refresh the page.");
             window.location.reload();
           }
         } catch (error) {

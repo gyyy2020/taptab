@@ -6,6 +6,10 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
+  "host_permissions": [
+    "https://favicon.im/*",
+    "https://www.google.com/s2/favicons*"
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",

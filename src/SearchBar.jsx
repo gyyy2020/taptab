@@ -86,8 +86,6 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
     console.log('Initial selectedEngine:', initialSelected);
     return initialSelected;
   });
-  // const [isModalVisible, setIsModalVisible] = useState(false);
-  // const searchBarRef = useRef(null);
 
   // Effect to save the list of search engines to local storage whenever it changes
   useEffect(() => {
