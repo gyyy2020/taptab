@@ -71,7 +71,13 @@ const SettingsPage = ({ visible, onClose, onSettingChange, currentSettings }) =>
       const item = localStorage.getItem(key);
       if (item) {
         try {
-          backupData[key] = JSON.parse(item);
+          const parsedItem = JSON.parse(item);
+          if (key === 'searchEngines' && Array.isArray(parsedItem)) {
+            // Remove icon from each engine in the searchEngines array
+            backupData[key] = parsedItem.map(({ icon, ...rest }) => rest);
+          } else {
+            backupData[key] = parsedItem;
+          }
         } catch (e) {
           backupData[key] = item;
         }
