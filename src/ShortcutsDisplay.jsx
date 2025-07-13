@@ -70,6 +70,12 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
         const response = await fetch(sourceUrl);
         if (response.ok) {
           const blob = await response.blob();
+          // Check if the blob is empty or very small, which might indicate a blank image
+          if (blob.size < 100) { // Threshold of 100 bytes, adjust if necessary
+            console.warn(`Fetched favicon from ${sourceUrl} is too small (${blob.size} bytes), trying next source.`);
+            continue; // Skip this source and try the next one
+          }
+
           // Convert the fetched blob to a Base64 data URL
           fetchedBase64 = await new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -78,7 +84,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
             reader.readAsDataURL(blob);
           });
           finalIconUrl = sourceUrl; // Keep track of the successful source URL
-          break; // Exit loop on first successful fetch
+          break; // Exit loop on first successful fetch with a non-empty blob
         }
       } catch (error) {
         console.warn(`Failed to fetch favicon from ${sourceUrl}:`, error); // Log warnings for failed attempts
@@ -191,7 +197,7 @@ const ShortcutsDisplay = ({ category, shortcuts, layouts, onLayoutChange, height
         {/* Map through the shortcuts array and render each shortcut or widget */}
         {shortcuts.map((shortcut) => (
           // Each shortcut is rendered within a div that acts as a grid item
-          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h }} className="shortcut-app" onContextMenu={(e) => onShortcutContextMenu(e, shortcut)}>
+          <div key={shortcut.i} data-grid={{ x: shortcut.x, y: shortcut.y, w: shortcut.w, h: shortcut.h, maxW: 6, maxH: 6 }} className="shortcut-app" onContextMenu={(e) => onShortcutContextMenu(e, shortcut)}>
             {/* Conditionally render different components based on the shortcut's component type */}
             {shortcut.component === 'BirthdayWidget' ? (
               <BirthdayWidget
