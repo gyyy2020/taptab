@@ -61,6 +61,7 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
             localStorage.setItem(cacheKey, reader.result);
           } catch (e) {
             // Storage quota might be exceeded, so we just ignore the error.
+            console.error('Failed to cache favicon:', e);
           }
           resolve(reader.result);
         };
@@ -68,6 +69,7 @@ const SearchBar = React.forwardRef(({ openInNewTab, ...props }, ref) => {
         reader.readAsDataURL(blob);
       });
     } catch (e) {
+      console.error('Failed to fetch favicon:', e);
       // If fetching fails, return the original icon URL.
       return iconUrl;
     }
