@@ -55,17 +55,20 @@ const WeatherWidget = () => {
 
   // New function to fetch coordinates using Nominatim
   const fetchCoordinates = async (cityName) => {
-    try {
-      const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cityName)}&format=json&limit=1`;
-      const response = await fetch(nominatimUrl, {
-        headers: {
-          'User-Agent': 'NewTabExtension/1.0 (your-email@example.com)' // Required by Nominatim
-        }
-      });
-      const data = await response.json();
+    let lat = 51.5072, lon = -0.1276; // London default
+    if (city === 'London') {
+      return { lat, lon }; // Return default coordinates for London
+    }
 
-      if (response.ok && data.length > 0) {
-        return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    try {
+      const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
+      const response = await fetch(geoUrl);
+      const geoData = await response.json();
+
+      if (geoData.results && geoData.results[0]) {
+        lat = geoData.results[0].latitude;
+        lon = geoData.results[0].longitude;
+        return { lat, lon };
       } else {
         throw new Error('City not found or geocoding error.');
       }
@@ -130,7 +133,7 @@ const WeatherWidget = () => {
         }
       }
       fetchWeatherData(city);
-      }
+    }
   }, [city]);
 
   // Handle clicks on the widget to show the city input modal
@@ -174,7 +177,7 @@ const WeatherWidget = () => {
       <>
         <div className="weather-header">
           <span className="weather-title">Weather</span>
-          <svg width="22" height="22" style={{verticalAlign:"middle",opacity:0.7}} viewBox="0 0 24 24"><path fill="#3a8dde" d="M6 19a7 7 0 1 1 12.9-4.1A5 5 0 1 1 18 19H6z"/></svg>
+          <svg width="22" height="22" style={{ verticalAlign: "middle", opacity: 0.7 }} viewBox="0 0 24 24"><path fill="#3a8dde" d="M6 19a7 7 0 1 1 12.9-4.1A5 5 0 1 1 18 19H6z" /></svg>
           <span className="weather-city">{weatherData.city}</span>
         </div>
         <div className="weather-forecast">
